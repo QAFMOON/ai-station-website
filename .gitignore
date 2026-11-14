@@ -1,0 +1,8 @@
+node_modules
+.next
+.env
+.env.local
+next-env.d.ts
+
+# Local copies of the Cursor and Claude chats for this project.
+chats/
