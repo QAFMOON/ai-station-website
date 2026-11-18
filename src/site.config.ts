@@ -5,6 +5,8 @@ export const site = {
   // TODO before launch: real domain, mailbox and LinkedIn page.
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.example.com",
   email: "hello@example.com",
+  // Optional hero background video, e.g. "/video/hero.mp4". Leave undefined for the gradient-only hero.
+  heroVideo: undefined as string | undefined,
   linkedin: "https://www.linkedin.com/company/your-page",
   location: { en: "United Arab Emirates", ar: "الإمارات العربية المتحدة" },
 } as const;

@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import "@fontsource-variable/readex-pro";
+import "@fontsource-variable/manrope";
+import "@fontsource/almarai/arabic-400.css";
+import "@fontsource/almarai/arabic-700.css";
+import "@fontsource/almarai/arabic-800.css";
+import "@fontsource/almarai/latin-400.css";
+import "@fontsource/almarai/latin-700.css";
 import "../globals.css";
 import { getDictionary } from "@/i18n";
 import { dirOf, isLocale, locales, site } from "@/site.config";
