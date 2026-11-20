@@ -2458,6 +2458,26 @@ body:has(.hero) .header {
   grid-template-columns: 1.4fr 1fr 1fr;
   gap: 2.5rem;
 }
+/* A dashed line between the footer columns, from the footer's top edge, fading out as it goes down (the same line as the page frame). */
+.footer-grid > :not(:first-child) {
+  position: relative;
+}
+.footer-grid > :not(:first-child)::before {
+  content: "";
+  position: absolute;
+  top: -3.5rem;
+  height: clamp(280px, 32vw, 440px);
+  inset-inline-start: -1.25rem; /* half the gap between the columns */
+  border-inline-start: 1px dashed var(--frame-line);
+  mask-image: linear-gradient(to bottom, #000 12%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 12%, transparent 100%);
+  pointer-events: none;
+}
+@media (max-width: 700px) {
+  .footer-grid > :not(:first-child)::before {
+    display: none;
+  }
+}
 .footer-brand p {
   margin-top: 1rem;
   max-width: 34ch;
@@ -3555,4 +3575,35 @@ body:has(.hero) .header {
   .header .logo-name {
     display: none;
   }
+}
+
+/* The link to browse more models, under the models heading */
+.models-more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem 1rem;
+  max-width: 78ch;
+  margin: calc(-1 * clamp(0.2rem, 1vw, 0.8rem)) 0 clamp(1.4rem, 3vw, 2.2rem);
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.models-more a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.9rem;
+  border: 1px dashed var(--frame-line);
+  border-radius: 999px;
+  background: var(--field);
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.models-more a:hover {
+  background: var(--field-hover);
+}
+[dir="rtl"] .models-more svg {
+  transform: scaleX(-1);
 }

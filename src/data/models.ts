@@ -84,13 +84,13 @@ export type ModelFacts = {
   context?: string;
 };
 
-// Layers from the centre out: 0 flagship (100B+), 1 Arabic, 2 mid-size and speech (20B to 100B),
+// Layers from the centre out: 0 flagship (100B+), 1 Arabic (Arabic-first models, and models that list Arabic among their languages), 2 mid-size and speech (20B to 100B),
 // 3 small (under 20B) plus search and document models.
 export const models: ModelFacts[] = [
   { id: "deepseek-v4-pro", name: "DeepSeek V4 Pro", short: "DeepSeek V4 Pro", maker: "DeepSeek", logo: "deepseek", ring: 0, size: "1.6T", active: "49B", license: "MIT", context: "1M" },
   { id: "glm-5-2", name: "GLM-5.2", short: "GLM 5.2", maker: "Z.ai", logo: "zai", ring: 0, size: "753B", license: "MIT" },
   { id: "gpt-oss-120b", name: "gpt-oss-120b", short: "gpt-oss 120b", maker: "OpenAI", logo: "openai", ring: 0, size: "117B", active: "5.1B", license: "Apache 2.0" },
-  { id: "mistral-small-4", name: "Mistral Small 4", short: "Mistral Small 4", maker: "Mistral AI", logo: "mistral", ring: 0, size: "119B", active: "6.5B", license: "Apache 2.0", context: "256K" },
+  { id: "mistral-small-4", name: "Mistral Small 4", short: "Mistral Small 4", maker: "Mistral AI", logo: "mistral", ring: 1, size: "119B", active: "6.5B", license: "Apache 2.0", context: "256K" },
   { id: "nemotron-3-ultra", name: "Nemotron 3 Ultra", short: "Nemotron 3 Ultra", maker: "NVIDIA", logo: "nvidia", ring: 0, size: "550B", active: "55B", license: "OpenMDW 1.1" },
   { id: "step-3-5-flash", name: "Step-3.5-Flash", short: "Step 3.5 Flash", maker: "StepFun", logo: "stepfun", ring: 0, size: "196B", active: "11B", license: "Apache 2.0" },
   { id: "hy3", name: "Hy3", short: "Hy3", maker: "Tencent", logo: "tencent", ring: 0, size: "295B", active: "21B", license: "Apache 2.0" },
@@ -106,7 +106,7 @@ export const models: ModelFacts[] = [
   { id: "nanbeige-4-3-33b", name: "Nanbeige4.3-33B", short: "Nanbeige 4.3", maker: "Nanbeige", logo: "nanbeige", ring: 2, size: "33B", license: "Apache 2.0" },
   { id: "k2-think-v2", name: "K2-Think V2", short: "K2-Think V2", maker: "MBZUAI IFM", logo: "ifm", ring: 2, size: "70B", license: "Apache 2.0" },
   { id: "mimo-v2-6-9b", name: "MiMo-V2.6 9B", short: "MiMo V2.6 9B", maker: "Xiaomi", logo: "mimo", ring: 3, size: "9B", license: "MIT" },
-  { id: "eurollm-9b", name: "EuroLLM-9B", short: "EuroLLM 9B", maker: "EuroLLM project", logo: "eurollm", ring: 3, size: "9B", license: "Apache 2.0" },
+  { id: "eurollm-9b", name: "EuroLLM-9B", short: "EuroLLM 9B", maker: "EuroLLM project", logo: "eurollm", ring: 1, size: "9B", license: "Apache 2.0" },
   { id: "kanana-1-5-8b", name: "Kanana 1.5 8B", short: "Kanana 1.5", maker: "Kakao", logo: "kakao", ring: 3, size: "8B", license: "Apache 2.0" },
   { id: "ernie-4-5-vl-424b", name: "ERNIE-4.5-VL-424B-A47B", short: "ERNIE 4.5 VL", maker: "Baidu", logo: "baidu", ring: 0, size: "424B", active: "47B", license: "Apache 2.0" },
   { id: "yehia-7b", name: "Yehia 7B", short: "Yehia 7B", maker: "Navid AI", logo: "navid", ring: 1, size: "7B", license: "Apache 2.0" },
@@ -133,7 +133,7 @@ export const models: ModelFacts[] = [
   { id: "fanar-2-27b", name: "Fanar 2 27B", short: "Fanar 2 27B", maker: "QCRI · Qatar", logo: "qcri", ring: 1, size: "27B", license: "Apache 2.0" },
   { id: "qwen3-8-27b", name: "Qwen3.8-27B", short: "Qwen3.8 27B", maker: "Alibaba Qwen", logo: "qwen", ring: 2, size: "27B", license: "Apache 2.0", context: "262K (up to 1M)" },
   { id: "gemma-4-31b", name: "Gemma 4 31B", short: "Gemma 4 31B", maker: "Google", logo: "google", ring: 2, size: "31B", license: "Apache 2.0", context: "256K" },
-  { id: "granite-4-h-small", name: "Granite 4.0 H Small", short: "Granite 4.0", maker: "IBM", logo: "ibm", ring: 2, size: "32B", active: "9B", license: "Apache 2.0", context: "128K" },
+  { id: "granite-4-h-small", name: "Granite 4.0 H Small", short: "Granite 4.0", maker: "IBM", logo: "ibm", ring: 1, size: "32B", active: "9B", license: "Apache 2.0", context: "128K" },
   { id: "apertus-v1-5-70b", name: "Apertus v1.5 70B", short: "Apertus 70B", maker: "Swiss AI", logo: "swissai", ring: 2, size: "70B", license: "Apache 2.0" },
   { id: "kimi-linear-48b", name: "Kimi-Linear 48B", short: "Kimi Linear 48B", maker: "Moonshot AI", logo: "moonshot", ring: 2, size: "48B", active: "3B", license: "MIT" },
   { id: "muse-glimmer-30b", name: "Muse-Glimmer-30B", short: "Muse Glimmer 30B", maker: "Meta", logo: "meta", ring: 2, size: "30B", license: "Apache 2.0", context: "128K+" },
@@ -148,7 +148,7 @@ export const models: ModelFacts[] = [
   { id: "zaya1-vl-8b", name: "ZAYA1-VL-8B", short: "ZAYA1 VL 8B", maker: "Zyphra", logo: "zyphra", ring: 3, size: "8B", license: "Apache 2.0" },
   { id: "gigachat-3-1-10b", name: "GigaChat 3.1 10B-A1.8B", short: "GigaChat 3.1", maker: "Sber AI", logo: "aisage", ring: 3, size: "10B", active: "1.8B", license: "MIT" },
   { id: "baguettotron", name: "Baguettotron", short: "Baguettotron", maker: "PleIAs", logo: "pleias", ring: 3, license: "Apache 2.0" },
-  { id: "bge-m3", name: "BGE-M3", short: "BGE-M3", maker: "BAAI", logo: "baai", ring: 3, license: "MIT", context: "8,192" },
+  { id: "bge-m3", name: "BGE-M3", short: "BGE-M3", maker: "BAAI", logo: "baai", ring: 1, license: "MIT", context: "8,192" },
   { id: "mxbai-rerank-large-v2", name: "mxbai-rerank-large-v2", short: "Mxbai Reranker", maker: "Mixedbread", logo: "mixedbread", ring: 3, size: "1.5B", license: "Apache 2.0" },
   { id: "nomic-embed-v2", name: "Nomic Embed Text v2 MoE", short: "Nomic Embed", maker: "Nomic AI", logo: "nomic", ring: 3, license: "Apache 2.0" },
   { id: "arctic-embed-l-v2", name: "Arctic Embed L 2.0", short: "Arctic Embed", maker: "Snowflake", logo: "snowflake", ring: 3, license: "Apache 2.0" },

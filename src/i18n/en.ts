@@ -390,9 +390,16 @@ export const en = {
     title: 'Models we can run',
     lead: 'Open models, from the largest in the centre to the smallest around the edge. We test them on your own questions before you rely on one.',
     hint: 'Hover or tap a model to see its details.',
+    more: {
+      link: 'Browse open models on Hugging Face',
+    },
     tiers: [
       { label: 'Flagship', range: '100B+ parameters', note: 'The most capable, and the most hardware.' },
-      { label: 'Arabic', range: 'Built for Arabic', note: 'Arabic-first models, in any size.' },
+      {
+        label: 'Arabic',
+        range: 'Arabic-first, or Arabic among its languages',
+        note: 'Arabic-first models in any size, plus open models that list Arabic among their languages.',
+      },
       {
         label: 'Mid-size and speech',
         range: '20B to 100B parameters, plus speech',
@@ -783,7 +790,7 @@ export const en = {
       {
         id: 'bge-m3',
         tag: 'Search',
-        use: 'Finds the right passages in your documents (text embeddings).',
+        use: 'Finds the right passages in your documents, in 100+ languages including Arabic (text embeddings).',
         runs: 'Confirmed when we size your server',
       },
       {
@@ -1071,7 +1078,7 @@ export const en = {
       {
         id: 'bge-m3',
         tag: 'Search',
-        use: 'Finds the right passages in your documents (text embeddings).',
+        use: 'Finds the right passages in your documents, in 100+ languages including Arabic (text embeddings).',
         runs: 'Confirmed when we size your server',
       },
       {

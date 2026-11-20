@@ -189,6 +189,14 @@ export function ModelOrbit({ t }: { t: Dictionary['models'] }) {
     <div className='models'>
       <h2 className='h2 models-title-h'>{t.title}</h2>
       <p className='section-lead models-lead'>{t.lead}</p>
+      <p className='models-more'>
+        <a href='https://huggingface.co/models?pipeline_tag=text-generation&sort=trending' target='_blank' rel='noopener noreferrer'>
+          {t.more.link}
+          <svg viewBox='0 0 24 24' width='15' height='15' fill='none' stroke='currentColor' strokeWidth='1.8' strokeLinecap='round' strokeLinejoin='round' aria-hidden='true'>
+            <path d='M7 17 17 7M8 7h9v9' />
+          </svg>
+        </a>
+      </p>
 
       <div className={`orbit-wrap${tip ? ' is-paused' : ''}`} ref={wrapRef}>
         <div className='orbit' role='group' aria-label={t.title}>
