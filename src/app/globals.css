@@ -2707,7 +2707,7 @@ body:has(.hero) .header {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.3rem 0.8rem 0.3rem 0.35rem;
+  padding: 0.3rem 0.9rem 0.3rem 0.3rem; /* the logo circle sits the same distance from the pill's top, bottom and start edge */
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--field);
@@ -2715,11 +2715,18 @@ body:has(.hero) .header {
   color: var(--ink);
 }
 [dir="rtl"] .hero-models li {
-  padding: 0.3rem 0.35rem 0.3rem 0.8rem;
+  padding: 0.3rem 0.3rem 0.3rem 0.9rem;
 }
+/* Round logos, concentric with the pill: a white disc, the logo inset inside it, like the orbit. */
 .hero-models .m-logo {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
+  padding: 4px; /* in px: a percentage would be measured against the whole chip */
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.hero-models .m-logo img {
+  border-radius: 50%;
 }
 .hero-models-more {
   padding-inline: 0.9rem !important;
@@ -2787,12 +2794,6 @@ body:has(.hero) .header {
 }
 .shot-wide {
   overflow-x: auto;
-}
-.shot-credit {
-  margin-top: 0.7rem;
-  color: var(--faint);
-  font-size: 0.78rem;
-  text-align: center;
 }
 .shot-stack {
   display: grid;

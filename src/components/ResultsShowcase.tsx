@@ -43,10 +43,9 @@ export function ResultsShowcase({ t, prompt, copy, copied }: { t: R; prompt: str
   };
 
   const s = t.shots;
-  const credit = (...who: string[]) => `${s.label}: ${who.join(" · ")}`;
   const frames = [
-        <Shot key="chat" src="librechat-chat-agent" w={1440} h={900} alt={tab.title} credit={credit(s.librechat)} wide />,
-    <Shot key="agents" src="librechat-agents" w={1232} h={824} alt={tab.title} credit={credit(s.librechat)} wide />,
+        <Shot key="chat" src="librechat-chat-agent" w={1440} h={900} alt={tab.title} wide />,
+    <Shot key="agents" src="librechat-agents" w={1232} h={824} alt={tab.title} wide />,
     <div key="code" className="shot-code">
       <div className="shot-code-grid">
         <Shot src="vscode-code-agent" w={1600} h={1016} alt={tab.title} wide />
@@ -58,16 +57,15 @@ export function ResultsShowcase({ t, prompt, copy, copied }: { t: R; prompt: str
           <i key={e}>{e}</i>
         ))}
       </p>
-      <p className="shot-credit">{credit(s.opencode, s.kilo)}</p>
     </div>,
-    <Shot key="voice" src="librechat-voice-assistant" w={916} h={636} alt={tab.title} credit={credit(s.librechat)} narrow>
+    <Shot key="voice" src="librechat-voice-assistant" w={916} h={636} alt={tab.title} narrow>
       <span className="focus-ring focus-tts" aria-hidden="true" />
       <span className="focus-pill focus-pill-tts">{s.tts}</span>
       <span className="focus-ring focus-stt" aria-hidden="true" />
       <span className="focus-pill focus-pill-stt">{s.stt}</span>
     </Shot>,
     <Api key="api" t={t} prompt={prompt} copy={copy} copied={copied} />,
-    <Stack key="mcp" credit={credit(s.librechat)}>
+    <Stack key="mcp">
       <Shot src="librechat-mcp-catalog" w={1400} h={394} alt={s.mcpCatalog} badge={s.mcpCatalog} />
       <Shot src="librechat-mcp-menu" w={925} h={337} alt={s.mcpMenu} badge={s.mcpMenu} />
     </Stack>,
@@ -110,7 +108,7 @@ export function ResultsShowcase({ t, prompt, copy, copied }: { t: R; prompt: str
   );
 }
 
-function Shot({ src, w, h, alt, credit, badge, wide, narrow, children }: { src: string; w: number; h: number; alt: string; credit?: string; badge?: string; wide?: boolean; narrow?: boolean; children?: React.ReactNode }) {
+function Shot({ src, w, h, alt, badge, wide, narrow, children }: { src: string; w: number; h: number; alt: string; badge?: string; wide?: boolean; narrow?: boolean; children?: React.ReactNode }) {
   return (
     <figure className={narrow ? "shot shot-narrow" : "shot"}>
       {badge && <span className="shot-badge">{badge}</span>}
@@ -118,16 +116,14 @@ function Shot({ src, w, h, alt, credit, badge, wide, narrow, children }: { src: 
         <Image src={`/images/product/${src}.webp`} alt={alt} width={w} height={h} sizes="(max-width: 1000px) 100vw, 1000px" />
         {children}
       </div>
-      {credit && <figcaption className="shot-credit">{credit}</figcaption>}
     </figure>
   );
 }
 
-function Stack({ children, credit }: { children: React.ReactNode; credit: string }) {
+function Stack({ children }: { children: React.ReactNode }) {
   return (
     <div className="shot-stack">
       {children}
-      <p className="shot-credit">{credit}</p>
     </div>
   );
 }
@@ -265,7 +261,6 @@ function Api({ t, prompt, copy, copied }: { t: R; prompt: string; copy: string; 
             <code>{paint(output(lang, a.answer))}</code>
           </pre>
         </div>
-        <p className="ui-foot">{a.foot}</p>
       </figure>
       <p className="shot-editors">
         {a.chips.map((c) => (

@@ -10,9 +10,9 @@ const LOOP = 11; // seconds
 const IGNITE = 2.2;
 const LIFTOFF = 3.3;
 
-// The rocket of the logo, standing up: a V-shaped nose that widens evenly (1, 3, 5 dots), one window, then the body, fins and engine.
-const ROCKET = ["...#...", "..###..", ".#####.", ".#####.", ".#####.", ".#####.", ".#####.", ".#####.", "#######", "##.#.##", "#..#..#"];
-const WINDOW = { c: 3, r: 3.5 }; // one porthole, centred on the body just under the nose
+// The rocket of the logo, standing up: a V-shaped nose that widens evenly (1, 3, 5 dots), one window (a hole in the dots, like
+// the logo's), then the body, fins and engine.
+const ROCKET = ["...#...", "..###..", ".#####.", ".##.##.", ".#####.", ".#####.", ".#####.", ".#####.", "#######", "##.#.##", "#..#..#"];
 
 type P = { x: number; y: number; vx: number; vy: number; age: number; life: number; r0: number; r1: number; kind: 0 | 1; seed: number };
 
@@ -140,30 +140,12 @@ export function LaunchFooter({ name }: { name: string }) {
       ctx.arc(x, y, r, 0, Math.PI * 2);
       ctx.fill();
     };
-    const sprite = (rows: string[], x0: number, y0: number, pitch: number, c: [number, number, number], a: number, win?: { c: number; r: number }) => {
+    const sprite = (rows: string[], x0: number, y0: number, pitch: number, c: [number, number, number], a: number) => {
       rows.forEach((row, r) =>
         [...row].forEach((ch, k) => {
           if (ch === "#") dot(x0 + (k + 0.5) * pitch, y0 + (r + 0.5) * pitch, pitch * 0.33, c, a, a);
         }),
       );
-      if (win) {
-        // The window: a clear round porthole with a ring, cut out of the body.
-        const x = x0 + (win.c + 0.5) * pitch;
-        const y = y0 + (win.r + 0.5) * pitch;
-        ctx.fillStyle = rgba(bg, a);
-        ctx.beginPath();
-        ctx.arc(x, y, pitch * 0.78, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = rgba(c, a);
-        ctx.lineWidth = Math.max(1.5, pitch * 0.14);
-        ctx.beginPath();
-        ctx.arc(x, y, pitch * 0.6, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.fillStyle = rgba(c, a * 0.9);
-        ctx.beginPath();
-        ctx.arc(x, y, pitch * 0.22, 0, Math.PI * 2);
-        ctx.fill();
-      }
     };
 
     // The pad: a tower with two arms on one side, a slab under the rocket, and a wider base.
@@ -245,7 +227,7 @@ export function LaunchFooter({ name }: { name: string }) {
       drawPad();
       if (!gone) {
         const rAlpha = t > LOOP - 0.9 ? (t - (LOOP - 0.9)) / 0.9 : 1;
-        sprite(ROCKET, rx + shake, ry, Q, ink, Math.max(0, rAlpha), WINDOW);
+        sprite(ROCKET, rx + shake, ry, Q, ink, Math.max(0, rAlpha));
       }
       for (const p of parts) {
         if (p.kind !== 1) continue;

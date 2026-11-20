@@ -91,7 +91,7 @@ export function HeroGrid() {
       drawLines(a.x, cs.getPropertyValue("--frame-line").trim());
       lines = a.c;
       const g = layer();
-      drawLines(g.x, rgba(accent, 0.85));
+      drawLines(g.x, rgba(accent, 0.38));
       glow = g.c;
       mask = layer().c;
       tmp = layer().c;
