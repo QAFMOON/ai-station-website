@@ -14,7 +14,7 @@ import { isLocale, site } from "@/site.config";
 function exampleRequest(prompt: string) {
   const body = JSON.stringify({ model: "jais-2", messages: [{ role: "user", content: prompt }] }, null, 2);
   return `curl https://ai.your-company/v1/chat/completions \\
-  -H "Authorization: Bearer $HIMA_KEY" \\
+  -H "Authorization: Bearer $AI_STATION_KEY" \\
   -H "Content-Type: application/json" \\
   -d '${body}'`;
 }

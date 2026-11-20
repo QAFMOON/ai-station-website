@@ -6,86 +6,75 @@ import { models, type ModelFacts, type ModelId } from "@/data/models";
 import type { Dictionary } from "@/i18n";
 
 // Layers from the centre out: flagship, Arabic, mid-size and speech, small, everything else.
-// Each layer is a band filled with models on one or more sub-rings, so any number of models fits.
+// Every layer is one or more real rings: logos sit evenly spaced on the circle line itself.
+// The flagship layer is a centre logo plus two rings. Rings are equally far apart, like a radar
+// target, and the logo size comes from the tightest ring so every ring has the same breathing space.
 // Sizes and distances are percentages of the orbit width.
-const TILE = [5.1, 5.7, 4.5, 4.0, 3.6]; // logo size per layer
-const GAP = 2.6; // space between layers
-const FILL = 0.64; // how full a band is allowed to be
-const TARGET = 46.5; // outer edge of the last layer
+const SIZE = [1, 1, 0.95, 0.9, 0.85]; // logo size per layer, relative
+const CLEAR = 1.45; // minimum distance between neighbours on a ring, in logo widths
+const RADIAL = 1.45; // minimum distance between rings, in logo widths
+const EDGE = 48.5; // the outermost logo must end inside this radius
+const TURN = 160; // seconds for one full clockwise turn. Every ring turns together, so the pattern holds its shape.
 
-type Placed = { id: ModelId; x: number; y: number; tile: number; layer: number };
+type Ring = { layer: number; models: ModelFacts[]; r: number; tile: number; start: number; turn: number };
+
+// How many logos go on each ring of a layer.
+function plan(n: number, layer: number) {
+  if (layer === 0 && n >= 12) return [1, 6, n - 7];
+  if (layer === 0 && n >= 8) return [1, n - 1];
+  if (n > 12 && layer !== 3) {
+    const inner = Math.round(n * 0.4);
+    return [inner, n - inner];
+  }
+  return [n];
+}
+
+function build(byLayer: ModelFacts[][]) {
+  const specs: { layer: number; models: ModelFacts[]; j: number }[] = [];
+  byLayer.forEach((list, layer) => {
+    let at = 0;
+    plan(list.length, layer).forEach((count, j) => {
+      if (count > 0) specs.push({ layer, models: list.slice(at, at + count), j });
+      at += count;
+    });
+  });
+  const centred = specs[0]?.models.length === 1;
+  const circles = specs.length - (centred ? 1 : 0); // rings drawn as circles
+  // Equal steps between rings. Find the logo size and step that satisfy every ring.
+  let T = 6;
+  let step = EDGE / circles;
+  for (let i = 0; i < 6; i++) {
+    step = (EDGE - 0.6 * T * SIZE[specs[specs.length - 1]!.layer]!) / circles;
+    let best = Infinity;
+    specs.forEach((sp, idx) => {
+      const k = centred ? idx : idx + 1; // 0 for the centre logo
+      if (k === 0) return;
+      const n = sp.models.length;
+      const chord = 2 * k * step * Math.sin(Math.PI / n);
+      best = Math.min(best, chord / (CLEAR * SIZE[sp.layer]!));
+      const prev = specs[idx - 1];
+      if (prev) best = Math.min(best, (2 * step) / (RADIAL * (SIZE[sp.layer]! + SIZE[prev.layer]!)));
+    });
+    T = best;
+  }
+  return specs.map((sp, idx): Ring => {
+    const k = centred ? idx : idx + 1;
+    return {
+      layer: sp.layer,
+      models: sp.models,
+      r: k === 0 ? 0 : k * step,
+      tile: T * SIZE[sp.layer]!,
+      start: -90,
+      turn: TURN,
+    };
+  });
+}
 
 const r2 = (n: number) => Math.round(n * 100) / 100;
-
-function layout(byLayer: ModelFacts[][], spacing: number) {
-  const placed: Placed[] = [];
-  const edges: number[] = [];
-  let rIn = 0;
-  byLayer.forEach((list, li) => {
-    const n = list.length;
-    if (!n) {
-      edges.push(rIn);
-      return;
-    }
-    const cell = TILE[li]! * spacing;
-    const minStep = cell * 0.95;
-    let rOut = Math.sqrt(rIn * rIn + (n * cell * cell) / (FILL * Math.PI));
-    let radii: number[] = [];
-    let cap: number[] = [];
-    for (let tries = 0; tries < 40; tries++) {
-      const band = rOut - rIn;
-      const m = Math.max(1, Math.floor((band - cell) / minStep) + 1);
-      radii = Array.from({ length: m }, (_, k) => (m === 1 ? (rIn + rOut) / 2 : rIn + cell / 2 + (k * (band - cell)) / (m - 1)));
-      cap = radii.map((r) => Math.max(1, Math.floor((2 * Math.PI * r) / (cell * 0.92))));
-      if (cap.reduce((a, b) => a + b, 0) >= n) break;
-      rOut += cell * 0.25;
-    }
-    const sum = radii.reduce((a, b) => a + b, 0);
-    const counts = radii.map((r, k) => Math.min(cap[k]!, Math.max(1, Math.round((n * r) / sum))));
-    let total = counts.reduce((a, b) => a + b, 0);
-    while (total > n) {
-      const k = counts.indexOf(Math.max(...counts));
-      counts[k]!--;
-      total--;
-    }
-    while (total < n) {
-      let k = 0;
-      let best = -1;
-      radii.forEach((r, i) => {
-        const room = cap[i]! - counts[i]!;
-        if (room > 0 && r / counts[i]! > best) {
-          best = r / counts[i]!;
-          k = i;
-        }
-      });
-      counts[k]!++;
-      total++;
-    }
-    let idx = 0;
-    radii.forEach((r, k) => {
-      for (let j = 0; j < counts[k]!; j++) {
-        const deg = -90 + li * 23 + k * 47 + (j * 360) / counts[k]!;
-        const rad = (deg * Math.PI) / 180;
-        placed.push({ id: list[idx++]!.id, x: r2(50 + r * Math.cos(rad)), y: r2(50 + r * Math.sin(rad)), tile: TILE[li]!, layer: li });
-      }
-    });
-    edges.push(rOut);
-    rIn = rOut + GAP;
-  });
-  return { placed, edges, outer: edges[edges.length - 1]! };
-}
-
-// Find the spacing that makes the last layer end at TARGET.
-function build(byLayer: ModelFacts[][]) {
-  let lo = 1.05;
-  let hi = 3;
-  for (let i = 0; i < 24; i++) {
-    const mid = (lo + hi) / 2;
-    if (layout(byLayer, mid).outer > TARGET) hi = mid;
-    else lo = mid;
-  }
-  return layout(byLayer, lo);
-}
+const at = (r: number, deg: number) => {
+  const a = (deg * Math.PI) / 180;
+  return { x: r2(50 + r * Math.cos(a)), y: r2(50 + r * Math.sin(a)) };
+};
 
 function Logo({ m, size }: { m: ModelFacts; size?: number }) {
   return (
@@ -101,7 +90,7 @@ export function ModelOrbit({ t }: { t: Dictionary["models"] }) {
   const cur = models.find((m) => m.id === sel)!;
   const curInfo = info(sel);
   const byRing = [0, 1, 2, 3, 4].map((r) => models.filter((m) => m.ring === r));
-  const { placed, edges } = build(byRing);
+  const ringList = build(byRing);
 
   return (
     <div className="models">
@@ -109,36 +98,45 @@ export function ModelOrbit({ t }: { t: Dictionary["models"] }) {
         {/* Desktop: the orbit */}
         <div className="orbit" role="group" aria-label={t.title}>
           <svg className="orbit-rings" viewBox="0 0 100 100" aria-hidden="true">
-            {edges.map((e, i) => (
-              <circle
-                key={i}
-                className={`orbit-ring ring-${i}${i === 0 || i === 1 ? " gold" : ""}`}
-                cx="50"
-                cy="50"
-                r={r2(e + GAP / 2)}
-                style={{ animationDuration: `${40 + i * 25}s` }}
-              />
-            ))}
+            {ringList
+              .filter((rg) => rg.r > 0)
+              .map((rg, i) => (
+                <circle
+                  key={i}
+                  className={`orbit-ring ring-${rg.layer}`}
+                  cx="50"
+                  cy="50"
+                  r={r2(rg.r)}
+                  style={{ animationDuration: `${rg.turn}s` }}
+                />
+              ))}
           </svg>
-          {placed.map((pl) => {
-            const m = models.find((x) => x.id === pl.id)!;
-            return (
-              <button
-                key={m.id}
-                type="button"
-                className={`node-m ring-${pl.layer}${sel === m.id ? " is-sel" : ""}`}
-                style={{ left: `${pl.x}%`, top: `${pl.y}%`, ["--tile" as string]: String(pl.tile) }}
-                aria-pressed={sel === m.id}
-                aria-label={m.name}
-                onMouseEnter={() => setSel(m.id)}
-                onFocus={() => setSel(m.id)}
-                onClick={() => setSel(m.id)}
-              >
-                <Logo m={m} />
-                <span className="node-name">{m.short}</span>
-              </button>
-            );
-          })}
+          {ringList.map((rg, ri) => (
+            <div key={ri} className="orbit-layer" style={{ animationDuration: `${rg.turn}s` }}>
+              {rg.models.map((m, k) => {
+                const pos = rg.r === 0 ? { x: 50, y: 50 } : at(rg.r, rg.start + (k * 360) / rg.models.length);
+                return (
+                  <button
+                    key={m.id}
+                    type="button"
+                    className={`node-m ring-${rg.layer}${sel === m.id ? " is-sel" : ""}`}
+                    style={{ left: `${pos.x}%`, top: `${pos.y}%`, ["--tile" as string]: String(r2(rg.tile)) }}
+                    aria-pressed={sel === m.id}
+                    aria-label={m.name}
+                    onMouseEnter={() => setSel(m.id)}
+                    onFocus={() => setSel(m.id)}
+                    onClick={() => setSel(m.id)}
+                  >
+                    {/* Turns the other way at the same speed, so the logo stays upright. */}
+                    <span className="node-inner" style={{ animationDuration: `${rg.turn}s` }}>
+                      <Logo m={m} />
+                      <span className="node-name">{m.short}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          ))}
         </div>
 
         {/* Phones: the same models as three tiers */}

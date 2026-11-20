@@ -36,6 +36,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       images: [{ url: `/og-${locale}.png`, width: 1200, height: 630 }],
     },
     twitter: { card: "summary_large_image" },
+    // Stop Chrome's "Translate this page?" prompt: each language already has its own page.
+    other: { google: "notranslate" },
   };
 }
 
@@ -59,7 +61,16 @@ export default async function RootLayout({
     sameAs: [site.linkedin],
   };
   return (
-    <html lang={locale} dir={dirOf(locale)}>
+    <html lang={locale} dir={dirOf(locale)} translate="no" className="notranslate" suppressHydrationWarning>
+      <head>
+        {site.themeToggle && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`,
+            }}
+          />
+        )}
+      </head>
       <body>
         <a className="skip" href="#main">
           {t.nav.skip}

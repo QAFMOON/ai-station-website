@@ -1,7 +1,14 @@
-/* Hima — dark design system.
+/* AI Station — dark design system.
    Deep green-black, warm sand accent, teal for data lines. Photo-led hero. Latin: Manrope. Arabic: Almarai.
    Logical properties only, so one stylesheet serves LTR and RTL. */
-:root {
+/* Dark is the base. The hero, closing band and code blocks stay dark in both themes. */
+:root,
+.hero,
+.cta-band,
+.terminal,
+body:has(.hero) .header:not(.is-scrolled):not(.is-open) {
+  color-scheme: dark;
+  color: var(--ink);
   --bg: #060b0d;
   --bg-2: #0a1215;
   --surface: #0e171b;
@@ -9,12 +16,20 @@
   --ink: #f3efe6;
   --muted: #a4b3af;
   --faint: #6f827e;
-  --line: rgba(243, 239, 230, 0.09);
-  --line-strong: rgba(243, 239, 230, 0.2);
+  --bg-rgb: 6, 11, 13;
+  --bg-2-rgb: 10, 18, 21;
+  --ink-rgb: 243, 239, 230;
   --accent: #e2b86e;
   --accent-hi: #f1cf90;
   --accent-ink: #1a1306;
   --teal: #46d6bd;
+  --teal-hi: #9ff5e8;
+}
+:root {
+  /* Lines are one neutral grey in every theme, so they never change colour when the theme switches. */
+  --line: rgba(128, 128, 128, 0.2);
+  --line-strong: rgba(128, 128, 128, 0.36);
+  --frame-line: rgba(128, 128, 128, 0.42);
   --radius: 16px;
   --wrap: 1180px;
   --font: "Manrope Variable", "Almarai", "Segoe UI", Tahoma, system-ui, sans-serif;
@@ -23,6 +38,46 @@
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --header-h: 69px;
 }
+/* Light theme: follows the system setting, or the test toggle's data-theme override. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-2: #f8f8f6;
+  --surface: #f5f5f2;
+  --surface-2: #ebebe7;
+  --ink: #12201f;
+  --muted: #4a5c58;
+  --faint: #76867f;
+  --bg-rgb: 255, 255, 255;
+  --bg-2-rgb: 248, 248, 246;
+  --ink-rgb: 18, 32, 31;
+  --accent: #9a6b17;
+  --accent-hi: #b07d22;
+  --accent-ink: #ffffff;
+  --teal: #0b8f7a;
+  --teal-hi: #0b8f7a;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #ffffff;
+    --bg-2: #f8f8f6;
+    --surface: #f5f5f2;
+    --surface-2: #ebebe7;
+    --ink: #12201f;
+    --muted: #4a5c58;
+    --faint: #76867f;
+    --bg-rgb: 255, 255, 255;
+    --bg-2-rgb: 248, 248, 246;
+    --ink-rgb: 18, 32, 31;
+    --accent: #9a6b17;
+    --accent-hi: #b07d22;
+    --accent-ink: #ffffff;
+    --teal: #0b8f7a;
+    --teal-hi: #0b8f7a;
+  }
+}
+
 
 *,
 *::before,
@@ -33,7 +88,6 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
   -webkit-text-size-adjust: 100%;
-  color-scheme: dark;
 }
 [dir="rtl"] body {
   font-family: var(--font-ar);
@@ -56,6 +110,52 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+/* Page frame: faint vertical guide lines just outside the content column, and hairlines between sections */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  top: var(--header-h); /* start below the navbar */
+  bottom: 0;
+  width: 0;
+  border-inline-start: 1px dashed var(--frame-line);
+  pointer-events: none;
+  z-index: 40;
+  display: none;
+}
+body::before {
+  inset-inline-start: calc(50% - var(--wrap) / 2 - 2rem);
+}
+body::after {
+  inset-inline-start: calc(50% + var(--wrap) / 2 + 2rem);
+}
+@media (min-width: 1320px) {
+  body::before,
+  body::after {
+    display: block;
+  }
+}
+/* horizontal hairlines stay between the two vertical frame lines */
+main > .section::before,
+.footer::before,
+.badges::before,
+.badges::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline: 50%;
+  width: min(100%, calc(var(--wrap) + 4rem));
+  translate: -50% 0;
+  height: 0;
+  border-top: 1px dashed var(--frame-line);
+  pointer-events: none;
+}
+[dir="rtl"] main > .section::before,
+[dir="rtl"] .footer::before,
+[dir="rtl"] .badges::before,
+[dir="rtl"] .badges::after {
+  translate: 50% 0;
 }
 img,
 svg,
@@ -154,7 +254,7 @@ ol {
   color: var(--ink);
 }
 .btn-ghost:hover {
-  background: rgba(243, 239, 230, 0.06);
+  background: rgba(var(--ink-rgb), 0.06);
   box-shadow: none;
 }
 .btn-small {
@@ -181,11 +281,21 @@ ol {
   top: 0;
   z-index: 50;
   padding-block: 0.85rem;
-  background: rgba(6, 11, 13, 0.82);
+  background: transparent;
+  transition: background-color 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+  border-bottom: 1px dashed var(--line-strong);
+}
+.header.is-scrolled,
+.header.is-open {
+  background: rgba(var(--bg-rgb), 0.82);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--line);
 }
+/* On the home page the transparent header floats over the hero. */
+body:has(.hero) .header {
+  margin-bottom: calc(-1 * var(--header-h));
+}
+
 .header-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -242,6 +352,26 @@ ol {
 .lang:hover {
   color: var(--ink);
   border-color: var(--line-strong);
+}
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.theme-toggle:hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
 }
 .nav-toggle {
   display: none;
@@ -310,7 +440,7 @@ ol {
     border: 1px solid var(--line-strong);
     border-radius: 16px;
     padding: 0.75rem;
-    background: rgba(10, 18, 21, 0.98);
+    background: rgba(var(--bg-2-rgb), 0.98);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px);
@@ -337,10 +467,10 @@ ol {
   isolation: isolate;
   overflow: hidden;
   /* Fill the first screen under the sticky header, so nothing of the next section shows. */
-  min-height: calc(100svh - var(--header-h));
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
-  padding-top: clamp(1rem, 2.5vw, 2rem);
+  padding-top: calc(var(--header-h) + clamp(1rem, 2.5vw, 2rem));
 }
 .hero > .wrap {
   flex: 1;
@@ -370,10 +500,10 @@ ol {
 .hero-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(6, 11, 13, 0.94) 0%, rgba(6, 11, 13, 0.78) 38%, rgba(6, 11, 13, 0.25) 100%);
+  background: linear-gradient(90deg, rgba(var(--bg-rgb), 0.94) 0%, rgba(var(--bg-rgb), 0.78) 38%, rgba(var(--bg-rgb), 0.25) 100%);
 }
 [dir="rtl"] .hero-scrim {
-  background: linear-gradient(270deg, rgba(6, 11, 13, 0.94) 0%, rgba(6, 11, 13, 0.78) 38%, rgba(6, 11, 13, 0.25) 100%);
+  background: linear-gradient(270deg, rgba(var(--bg-rgb), 0.94) 0%, rgba(var(--bg-rgb), 0.78) 38%, rgba(var(--bg-rgb), 0.25) 100%);
 }
 .hero-copy {
   max-width: 780px;
@@ -440,7 +570,16 @@ ol {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: 0;
-  border-top: 1px dashed var(--line-strong);
+}
+/* dashed lines above and below the strip, same as the table borders */
+.badges::before,
+.badges::after {
+  width: calc(100% + 4rem);
+}
+.badges::after {
+  top: auto;
+  bottom: 0;
+  width: 100vw; /* full width, like the line under the navbar */
 }
 .badges li {
   display: flex;
@@ -472,7 +611,7 @@ ol {
 }
 @media (max-width: 900px) {
   .hero-scrim {
-    background: rgba(6, 11, 13, 0.8);
+    background: rgba(var(--bg-rgb), 0.8);
   }
   .badges {
     grid-template-columns: minmax(0, 1fr);
@@ -975,7 +1114,7 @@ ol {
   scrollbar-width: none;
   border: 1px solid var(--line-strong);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--ink-rgb), 0.03);
 }
 .tab {
   flex: none;
@@ -993,7 +1132,7 @@ ol {
   color: var(--ink);
 }
 .tab[aria-selected="true"] {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--ink-rgb), 0.12);
   color: var(--ink);
 }
 .assist-main {
@@ -1089,7 +1228,7 @@ ol {
   padding: 1rem 1.1rem;
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--ink-rgb), 0.03);
   font-size: 0.95rem;
   color: var(--muted);
   display: grid;
@@ -1098,7 +1237,7 @@ ol {
 .chat-ans.mono {
   font-family: var(--mono);
   font-size: 0.85rem;
-  color: #c8d2ea;
+  color: var(--ink);
   white-space: pre-wrap;
   direction: ltr;
   text-align: left;
@@ -1160,7 +1299,7 @@ ol {
 .map-path.is-live {
   opacity: 1;
   stroke-width: 2;
-  stroke: #9ff5e8;
+  stroke: var(--teal-hi);
 }
 [dir="rtl"] .map-stage svg {
   transform: scaleX(-1);
@@ -1203,7 +1342,7 @@ ol {
   animation: ping 2.4s ease-out infinite;
 }
 .node[aria-selected="true"] {
-  color: #fff;
+  color: var(--ink);
 }
 .node.is-reached i {
   background: var(--teal);
@@ -1215,7 +1354,7 @@ ol {
 .node span {
   padding: 0.15rem 0.5rem;
   border-radius: 6px;
-  background: rgba(6, 11, 13, 0.85);
+  background: rgba(var(--bg-rgb), 0.85);
 }
 .node:hover {
   color: #fff;
@@ -1371,7 +1510,7 @@ ol {
 .orbit-ring {
   fill: none;
   stroke: var(--line-strong);
-  stroke-width: 1;
+  stroke-width: 1.2;
   vector-effect: non-scaling-stroke;
   stroke-dasharray: 3 7;
   animation: ring-dash linear infinite;
@@ -1381,16 +1520,44 @@ ol {
     stroke-dashoffset: -100;
   }
 }
-.orbit-ring.gold {
-  stroke: var(--accent);
-  stroke-opacity: 0.55;
+.orbit-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  animation: orbit-spin linear infinite;
 }
-.orbit-ring.ring-4 {
-  stroke-opacity: 0.35;
+.orbit-layer .node-m {
+  pointer-events: auto;
+}
+.node-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+  animation: orbit-unspin linear infinite;
+}
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes orbit-unspin {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+/* Hovering the orbit pauses it, so you can pick a model that is not drifting away. */
+.orbit:hover .orbit-layer,
+.orbit:hover .node-inner,
+.orbit:focus-within .orbit-layer,
+.orbit:focus-within .node-inner {
+  animation-play-state: paused;
 }
 /* The outermost layer is shown faded until you hover or select it. */
-.node-m.ring-4 {
-  opacity: 0.4;
+.node-m.ring-3 {
+  opacity: 0.5;
   transition: opacity 0.25s;
 }
 .node-m:hover,
@@ -1398,9 +1565,9 @@ ol {
 .node-m:focus-visible {
   z-index: 5;
 }
-.node-m.ring-4:hover,
-.node-m.ring-4.is-sel,
-.node-m.ring-4:focus-visible {
+.node-m.ring-3:hover,
+.node-m.ring-3.is-sel,
+.node-m.ring-3:focus-visible {
   opacity: 1;
 }
 /* With this many models, names show only for the one you hover or select. */
@@ -1413,7 +1580,7 @@ ol {
 .node-m:focus-visible .node-name {
   opacity: 1;
 }
-.tier-list.ring-4 {
+.tier-list.ring-3 {
   opacity: 0.7;
 }
 .m-logo {
@@ -1466,7 +1633,7 @@ ol {
   color: var(--ink);
   padding: 0.15rem 0.45rem;
   border-radius: 6px;
-  background: rgba(6, 11, 13, 0.92);
+  background: rgba(var(--bg-rgb), 0.92);
   border: 1px solid var(--line-strong);
   white-space: nowrap;
   pointer-events: none;
@@ -1664,7 +1831,7 @@ ol {
   font-size: 0.78rem;
 }
 .copy:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--ink-rgb), 0.08);
 }
 
 /* Pilot timeline */
@@ -1923,7 +2090,7 @@ ol {
   padding: 0.9rem 1.1rem;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--ink-rgb), 0.03);
 }
 .model strong {
   font-weight: 600;
@@ -1998,8 +2165,8 @@ ol {
 }
 .cta-band::after {
   background:
-    radial-gradient(ellipse 60% 65% at 50% 50%, rgba(6, 11, 13, 0.82), rgba(6, 11, 13, 0.5) 70%, transparent),
-    linear-gradient(to bottom, var(--bg) 0%, rgba(6, 11, 13, 0.35) 30%, rgba(6, 11, 13, 0.35) 70%, var(--bg) 100%);
+    radial-gradient(ellipse 60% 65% at 50% 50%, rgba(var(--bg-rgb), 0.82), rgba(var(--bg-rgb), 0.5) 70%, transparent),
+    linear-gradient(to bottom, var(--bg) 0%, rgba(var(--bg-rgb), 0.35) 30%, rgba(var(--bg-rgb), 0.35) 70%, var(--bg) 100%);
 }
 .cta-band .h2 {
   margin-inline: auto;
@@ -2049,7 +2216,7 @@ ol {
   width: 100%;
   padding: 0.85rem 0 0.7rem;
   border: 0;
-  border-bottom: 1px solid rgba(243, 239, 230, 0.4);
+  border-bottom: 1px solid var(--line-strong);
   border-radius: 0;
   background: transparent;
   font-size: 1.05rem;
@@ -2079,7 +2246,7 @@ ol {
   background-position: left 0.1rem center;
 }
 .field select option {
-  background: #0e171b;
+  background: var(--surface);
 }
 .field input:focus,
 .field select:focus,
@@ -2164,6 +2331,7 @@ ol {
 
 /* Footer */
 .footer {
+  position: relative;
   padding-block: 3.5rem 2.5rem;
   background: var(--bg);
 }
@@ -2209,6 +2377,12 @@ ol {
   border-top: 1px dashed var(--line-strong);
   color: var(--faint);
   font-size: 0.85rem;
+}
+/* connect the copyright line to the vertical frame lines (2rem outside the content) */
+@media (min-width: 1320px) {
+  .footer-legal {
+    margin-inline: -2rem;
+  }
 }
 @media (max-width: 700px) {
   .footer-grid {

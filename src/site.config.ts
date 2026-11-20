@@ -1,11 +1,13 @@
 // Everything brand-specific lives here. Change the name once and the whole
 // site (both languages), the SEO tags and the footer follow.
 export const site = {
-  name: { en: "Hima", ar: "حِمى" },
+  name: { en: "AI Station", ar: "AI Station" },
   // TODO before launch: real domain, mailbox and LinkedIn page.
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.example.com",
   email: "hello@example.com",
   // Optional hero background video, e.g. "/video/hero.mp4". Leave undefined for the gradient-only hero.
+  // Testing only: shows a dark/light button in the navbar. Set to false for launch, and the site follows the visitor's system theme.
+  themeToggle: true,
   heroVideo: undefined as string | undefined,
   linkedin: "https://www.linkedin.com/company/your-page",
   location: { en: "United Arab Emirates", ar: "الإمارات العربية المتحدة" },
