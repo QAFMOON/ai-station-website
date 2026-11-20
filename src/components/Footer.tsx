@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Dictionary } from "@/i18n";
 import { site, type Locale } from "@/site.config";
+import { FrameFade } from "./FrameFade";
 import { LaunchFooter } from "./LaunchFooter";
 import { Logo } from "./Logo";
 
@@ -10,6 +11,7 @@ export function Footer({ t, locale }: { t: Dictionary; locale: Locale }) {
   const year = new Date().getFullYear();
   return (
     <footer className="footer">
+      <FrameFade />
       <LaunchFooter name={site.name[locale]} />
       <div className="wrap footer-grid">
         <div className="footer-brand">

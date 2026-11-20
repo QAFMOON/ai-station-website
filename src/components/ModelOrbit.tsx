@@ -202,7 +202,7 @@ export function ModelOrbit({ t }: { t: Dictionary['models'] }) {
             <div
               key={ri}
               className={`orbit-layer ring-${ri}${hot?.ring === ri ? ' is-hot' : ''}`}
-              style={{ ['--r' as string]: String(RADII[ri]), animationDuration: `${TURN[ri]}s` }}>
+              style={{ ['--r' as string]: String(RADII[ri]), animationDuration: `calc(${TURN[ri]}s * var(--spin, 1))` }}>
               {list.map((m, k) => {
                 const pos = at(50, ringAngle(ri, k));
                 return (
@@ -219,7 +219,7 @@ export function ModelOrbit({ t }: { t: Dictionary['models'] }) {
                     onBlur={() => setTip(null)}
                     onClick={(e) => open(m, e.currentTarget)}>
                     {/* Turns the other way at the same speed, so the logo stays upright. */}
-                    <span className='node-inner' style={{ animationDuration: `${TURN[ri]}s` }}>
+                    <span className='node-inner' style={{ animationDuration: `calc(${TURN[ri]}s * var(--spin, 1))` }}>
                       <Logo m={m} />
                     </span>
                   </button>
