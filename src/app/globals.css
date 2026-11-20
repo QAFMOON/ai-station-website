@@ -1512,9 +1512,9 @@ body:has(.hero) .header {
   aspect-ratio: 100 / 72;
   overflow: hidden;
   container-type: inline-size;
-  --g1: rgba(var(--ink-rgb), 0.62);
-  --g2: #46d6bd;
-  --g3: #e2b86e;
+  --g1: rgba(var(--ink-rgb), 0.85);
+  --g2: var(--teal);
+  --g3: var(--accent);
 }
 .orbit-arcs {
   position: absolute;

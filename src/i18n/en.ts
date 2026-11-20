@@ -6,7 +6,7 @@ export const en = {
       "Private Arabic and English AI for regulated companies in the Gulf. It runs on your own servers, in a private cloud, or in an in-country shared cloud, and your data stays under your control.",
   },
   nav: {
-    why: "Why private",
+    models: "Models",
     how: "How it works",
     get: "What you get",
     where: "Where it runs",

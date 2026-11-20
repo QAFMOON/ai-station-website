@@ -48,15 +48,20 @@ function Globe() {
     let raf = 0;
     let ang = 0.6;
     let cols: string[] = [];
+    let frame = 0;
+    const readColours = () => {
+      const cs = getComputedStyle(cv);
+      cols = [cs.getPropertyValue("--g1"), cs.getPropertyValue("--g2"), cs.getPropertyValue("--g3")].map((c) => c.trim());
+    };
     const draw = () => {
       const s = cv.clientWidth;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       if (cv.width !== Math.round(s * dpr)) {
         cv.width = Math.round(s * dpr);
         cv.height = Math.round(s * dpr);
-        const cs = getComputedStyle(cv);
-        cols = [cs.getPropertyValue("--g1"), cs.getPropertyValue("--g2"), cs.getPropertyValue("--g3")].map((c) => c.trim());
       }
+      // Pick up a theme change within half a second.
+      if (frame++ % 30 === 0) readColours();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, s, s);
       const R = s * 0.5;

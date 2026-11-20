@@ -29,8 +29,8 @@ export function Header({ t, locale, path = "", banner = false }: { t: Dictionary
   const links = [
     ["#how", t.nav.how],
     ["#where", t.nav.where],
-    ["#why", t.nav.why],
     ["#get", t.nav.get],
+    ["#models", t.nav.models],
     ["#pilot", t.nav.pilot],
   ] as const;
 
