@@ -26,6 +26,25 @@ export type ModelId =
   | "kanana-1-5-8b"
   | "ernie-4-5-vl-424b"
   | "yehia-7b"
+  | "ax-k2"
+  | "jamba2-mini"
+  | "laguna-xs-2"
+  | "gworld-32b"
+  | "elyza-thinking-33b"
+  | "kat-dev-32b"
+  | "rnj-1-5-8b"
+  | "bielik-one-4b"
+  | "cat-paws-8b"
+  | "noro-olmo-13b"
+  | "afm-4-5b"
+  | "nuextract3"
+  | "sa2va-4b"
+  | "f2llm-v2-14b"
+  | "pplx-embed-v2"
+  | "inf-retriever-1-5b"
+  | "hikari-medium"
+  | "moonshine-tiny"
+  | "all-minilm-l6"
   | "jais-2-70b"
   | "fanar-2-27b"
   | "qwen3-8-27b"
@@ -91,6 +110,25 @@ export const models: ModelFacts[] = [
   { id: "kanana-1-5-8b", name: "Kanana 1.5 8B", short: "Kanana 1.5", maker: "Kakao", logo: "kakao", ring: 3, size: "8B", license: "Apache 2.0" },
   { id: "ernie-4-5-vl-424b", name: "ERNIE-4.5-VL-424B-A47B", short: "ERNIE 4.5 VL", maker: "Baidu", logo: "baidu", ring: 0, size: "424B", active: "47B", license: "Apache 2.0" },
   { id: "yehia-7b", name: "Yehia 7B", short: "Yehia 7B", maker: "Navid AI", logo: "navid", ring: 1, size: "7B", license: "Apache 2.0" },
+  { id: "ax-k2", name: "A.X K2", short: "A.X K2", maker: "SK Telecom", logo: "skt", ring: 0, size: "692B", license: "Apache 2.0" },
+  { id: "jamba2-mini", name: "Jamba2 Mini", short: "Jamba2 Mini", maker: "AI21 Labs", logo: "ai21", ring: 2, size: "52B", license: "Apache 2.0" },
+  { id: "laguna-xs-2", name: "Laguna XS.2", short: "Laguna XS.2", maker: "poolside", logo: "poolside", ring: 2, size: "33B", license: "Apache 2.0" },
+  { id: "gworld-32b", name: "gWorld 32B", short: "gWorld 32B", maker: "Trillion Labs", logo: "trillion", ring: 2, size: "32B", license: "Apache 2.0" },
+  { id: "elyza-thinking-33b", name: "ELYZA-Thinking 33B", short: "ELYZA Thinking", maker: "ELYZA", logo: "elyza", ring: 2, size: "33B", license: "Apache 2.0" },
+  { id: "kat-dev-32b", name: "KAT-Dev 32B", short: "KAT-Dev 32B", maker: "Kuaishou", logo: "kwaipilot", ring: 2, size: "33B", license: "Apache 2.0" },
+  { id: "rnj-1-5-8b", name: "Rnj-1.5 8B", short: "Rnj 1.5 8B", maker: "Essential AI", logo: "essential", ring: 3, size: "8B", license: "Apache 2.0" },
+  { id: "bielik-one-4b", name: "Bielik-One 4B", short: "Bielik One 4B", maker: "SpeakLeash", logo: "speakleash", ring: 3, size: "4.7B", license: "Apache 2.0" },
+  { id: "cat-paws-8b", name: "CAT-Paws 8B", short: "CAT-Paws 8B", maker: "CyberAgent", logo: "cyberagent", ring: 3, size: "8B", license: "Apache 2.0" },
+  { id: "noro-olmo-13b", name: "NorOLMo 13B", short: "NorOLMo 13B", maker: "HPLT", logo: "hplt", ring: 3, size: "13B", license: "Apache 2.0" },
+  { id: "afm-4-5b", name: "AFM-4.5B", short: "AFM 4.5B", maker: "Arcee AI", logo: "arcee", ring: 3, size: "4.5B", license: "Apache 2.0" },
+  { id: "nuextract3", name: "NuExtract3", short: "NuExtract 3", maker: "NuMind", logo: "numind", ring: 3, size: "4.5B", license: "Apache 2.0" },
+  { id: "sa2va-4b", name: "Sa2VA 4B", short: "Sa2VA 4B", maker: "ByteDance", logo: "bytedance", ring: 3, size: "5.3B", license: "Apache 2.0" },
+  { id: "f2llm-v2-14b", name: "F2LLM-v2 14B", short: "F2LLM v2", maker: "CodeFuse (Ant Group)", logo: "codefuse", ring: 3, size: "14B", license: "Apache 2.0" },
+  { id: "pplx-embed-v2", name: "pplx-embed-v2 9B", short: "pplx-embed v2", maker: "Perplexity", logo: "perplexity", ring: 3, size: "9B", license: "MIT" },
+  { id: "inf-retriever-1-5b", name: "inf-retriever 1.5B", short: "Inf Retriever", maker: "Infly", logo: "infly", ring: 3, size: "1.5B", license: "Apache 2.0" },
+  { id: "hikari-medium", name: "Hikari Medium", short: "Hikari", maker: "SB Intuitions", logo: "sbintuitions", ring: 3, size: "0.8B", license: "MIT" },
+  { id: "moonshine-tiny", name: "Moonshine Tiny", short: "Moonshine", maker: "Useful Sensors", logo: "moonshine", ring: 3, license: "MIT" },
+  { id: "all-minilm-l6", name: "all-MiniLM-L6-v2", short: "MiniLM", maker: "Sentence Transformers", logo: "sbert", ring: 3, size: "22M", license: "Apache 2.0" },
   { id: "jais-2-70b", name: "Jais 2 70B", short: "Jais 2 70B", maker: "Inception · MBZUAI · Cerebras", logo: "inception", ring: 1, size: "70B", license: "Apache 2.0", context: "8,192" },
   { id: "fanar-2-27b", name: "Fanar 2 27B", short: "Fanar 2 27B", maker: "QCRI · Qatar", logo: "qcri", ring: 1, size: "27B", license: "Apache 2.0" },
   { id: "qwen3-8-27b", name: "Qwen3.8-27B", short: "Qwen3.8 27B", maker: "Alibaba Qwen", logo: "qwen", ring: 2, size: "27B", license: "Apache 2.0", context: "262K (up to 1M)" },

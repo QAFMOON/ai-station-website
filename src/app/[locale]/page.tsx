@@ -46,7 +46,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
         <section id="how" className="section section-scenes">
           <div className="wrap">
-            <p className="eyebrow">01</p>
             <h2 className="h2">{t.how.title}</h2>
             <Scenes items={t.how.items} />
           </div>
@@ -55,7 +54,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section id="where" className="section">
           <div className="wrap">
             <Reveal className="section-intro">
-              <p className="eyebrow">02</p>
               <h2 className="h2">{t.where.title}</h2>
               <p className="section-lead">{t.where.lead}</p>
             </Reveal>
@@ -93,7 +91,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section id="why" className="section">
           <div className="wrap">
             <Reveal className="section-intro">
-              <p className="eyebrow">{t.control.kicker}</p>
               <h2 className="h2 h2-wide">{t.control.title}</h2>
             </Reveal>
             <Reveal>
@@ -118,13 +115,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
-        <section id="models" className="section">
+        <section id="models" className="section section-models">
           <div className="wrap">
-            <Reveal className="section-intro">
-              <p className="eyebrow">04</p>
-              <h2 className="h2">{t.models.title}</h2>
-              <p className="section-lead">{t.models.lead}</p>
-            </Reveal>
             <Reveal>
               <ModelOrbit t={t.models} />
             </Reveal>
@@ -134,7 +126,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section id="compare" className="section">
           <div className="wrap">
             <Reveal className="section-intro">
-              <p className="eyebrow">05</p>
               <h2 className="h2">{t.compare.title}</h2>
             </Reveal>
             <Reveal>
@@ -174,7 +165,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div className="wrap">
             <Reveal className="section-head">
               <div>
-                <p className="eyebrow">06</p>
                 <h2 className="h2">{t.pilot.title}</h2>
                 <p className="section-lead">{t.pilot.lead}</p>
               </div>
@@ -230,7 +220,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section id="security" className="section">
           <div className="wrap split">
             <Reveal>
-              <p className="eyebrow">06</p>
               <h2 className="h2">{t.security.title}</h2>
               <ul className="chips chips-lg">
                 {t.security.models.map((m) => (

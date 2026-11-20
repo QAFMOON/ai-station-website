@@ -1486,43 +1486,62 @@ body:has(.hero) .header {
   font-size: 0.95rem;
 }
 
-/* Models: orbit of open models */
+/* Models: orbiting logos around the heading */
 .models {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(300px, 28vw, 360px);
-  gap: clamp(1.5rem, 3vw, 3rem);
-  align-items: center;
+  position: relative;
 }
+.models-title-h {
+  margin-bottom: 0;
+}
+.models-lead {
+  margin-bottom: clamp(1rem, 3vw, 2rem);
+}
+.section-models {
+  padding-bottom: 0;
+}
+/* The stage runs edge to edge between the two vertical frame lines, and down to the line below. */
+.orbit-wrap {
+  position: relative;
+  width: min(100vw, calc(var(--wrap) + 4rem));
+  margin-inline: calc((100% - min(100vw, calc(var(--wrap) + 4rem))) / 2);
+}
+/* The stage: a dome. The centre of every arc is the middle of the bottom edge. */
 .orbit {
   position: relative;
   width: 100%;
-  max-width: 820px;
-  aspect-ratio: 1;
-  margin-inline: auto;
+  aspect-ratio: 100 / 72;
+  overflow: hidden;
   container-type: inline-size;
+  --g1: rgba(var(--ink-rgb), 0.62);
+  --g2: #46d6bd;
+  --g3: #e2b86e;
 }
-.orbit-rings {
+.orbit-arcs {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
-.orbit-ring {
+.orbit-arc {
   fill: none;
   stroke: var(--line-strong);
-  stroke-width: 1.2;
+  stroke-width: 1;
   vector-effect: non-scaling-stroke;
-  stroke-dasharray: 3 7;
-  animation: ring-dash linear infinite;
 }
-@keyframes ring-dash {
-  to {
-    stroke-dashoffset: -100;
-  }
+.orbit-globe {
+  position: absolute;
+  width: 62cqw;
+  height: 62cqw;
+  left: calc(50% - 31cqw);
+  top: calc(100% - 31cqw);
+  pointer-events: none;
 }
 .orbit-layer {
   position: absolute;
-  inset: 0;
+  width: calc(var(--r) * 2cqw);
+  height: calc(var(--r) * 2cqw);
+  left: calc(50% - var(--r) * 1cqw);
+  top: calc(100% - var(--r) * 1cqw);
   pointer-events: none;
   transform-origin: 50% 50%;
   animation: orbit-spin linear infinite;
@@ -1548,40 +1567,53 @@ body:has(.hero) .header {
     transform: rotate(-360deg);
   }
 }
-/* Hovering the orbit pauses it, so you can pick a model that is not drifting away. */
-.orbit:hover .orbit-layer,
-.orbit:hover .node-inner,
-.orbit:focus-within .orbit-layer,
-.orbit:focus-within .node-inner {
+/* While a logo is open, everything holds still. */
+.orbit-wrap.is-paused .orbit-layer,
+.orbit-wrap.is-paused .node-inner {
   animation-play-state: paused;
 }
-/* The outermost layer is shown faded until you hover or select it. */
-.node-m.ring-3 {
+/* The outermost arc is slightly faded until you hover it. */
+.orbit-layer.ring-3 .node-m {
   opacity: 0.5;
+}
+.orbit-layer.ring-3 .node-m:hover,
+.orbit-layer.ring-3 .node-m:focus-visible {
+  opacity: 1;
+}
+.node-m {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: clamp(40px, 7cqw, 104px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
   transition: opacity 0.25s;
 }
 .node-m:hover,
-.node-m.is-sel,
 .node-m:focus-visible {
   z-index: 5;
 }
-.node-m.ring-3:hover,
-.node-m.ring-3.is-sel,
-.node-m.ring-3:focus-visible {
-  opacity: 1;
+.node-m .m-logo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 14%;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 0 0 4px var(--bg);
+  transition: border-color 0.2s, transform 0.3s var(--ease);
 }
-/* With this many models, names show only for the one you hover or select. */
-.node-m .node-name {
-  opacity: 0;
-  transition: opacity 0.2s;
+.node-m .m-logo img {
+  border-radius: 50%;
 }
-.node-m:hover .node-name,
-.node-m.is-sel .node-name,
-.node-m:focus-visible .node-name {
-  opacity: 1;
-}
-.tier-list.ring-3 {
-  opacity: 0.7;
+.node-m:hover .m-logo,
+.node-m:focus-visible .m-logo {
+  border-color: var(--accent);
+  transform: scale(1.1);
 }
 .m-logo {
   display: inline-grid;
@@ -1596,69 +1628,36 @@ body:has(.hero) .header {
   height: 100%;
   object-fit: cover;
 }
-.node-m {
+/* The details card that opens on hover, above everything. */
+.model-pop {
   position: absolute;
-  transform: translate(-50%, -50%);
-  display: block;
-  width: clamp(20px, calc(var(--tile) * 1cqw), 80px);
-  aspect-ratio: 1;
-  padding: 0;
-  border: 0;
-  border-radius: 22%;
-  background: none;
-  cursor: pointer;
-  color: var(--muted);
-}
-.node-m .m-logo {
-  width: 100%;
-  height: 100%;
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--line-strong);
-  transition: box-shadow 0.2s, transform 0.3s var(--ease);
-}
-.node-m:hover .m-logo,
-.node-m.is-sel .m-logo {
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
-  transform: scale(1.08);
-}
-.node-name {
-  position: absolute;
-  top: calc(100% + 0.45rem);
-  inset-inline-start: 50%;
-  transform: translateX(-50%);
-  width: max-content;
-  max-width: 7.5rem;
-  font-size: 0.7rem;
-  line-height: 1.2;
-  text-align: center;
-  color: var(--ink);
-  padding: 0.15rem 0.45rem;
-  border-radius: 6px;
-  background: rgba(var(--bg-rgb), 0.92);
-  border: 1px solid var(--line-strong);
-  white-space: nowrap;
+  z-index: 60;
+  width: min(340px, 90%);
+  transform: translate(-50%, -100%);
   pointer-events: none;
+  animation: pop-in 0.18s var(--ease);
 }
-[dir="rtl"] .node-name {
-  transform: translateX(50%);
+.model-pop.below {
+  transform: translate(-50%, 0);
 }
-.node-m.is-sel .node-name,
-.node-m:hover .node-name {
-  color: var(--ink);
+@keyframes pop-in {
+  from {
+    opacity: 0;
+  }
+}
+.model-pop .model-card {
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
 }
 .tier-lists {
   display: none;
 }
-.model-panel {
-  display: grid;
-  gap: 1.4rem;
-}
 .model-card {
-  padding: 1.4rem;
+  padding: 1.3rem;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
   background: var(--surface);
   display: grid;
-  gap: 0.9rem;
+  gap: 0.85rem;
   justify-items: start;
 }
 .model-tier {
@@ -1666,7 +1665,7 @@ body:has(.hero) .header {
   align-items: center;
   gap: 0.6rem;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
 }
 .model-tier b {
   color: var(--ink);
@@ -1690,23 +1689,24 @@ body:has(.hero) .header {
   align-items: center;
 }
 .model-card h3 {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 .model-card-head p {
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: 0.86rem;
 }
 .model-use {
   color: var(--ink);
+  font-size: 0.95rem;
 }
 .model-facts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.9rem 1.2rem;
+  gap: 0.8rem 1.2rem;
   width: 100%;
-  padding-top: 1rem;
+  padding-top: 0.9rem;
   border-top: 1px dashed var(--line-strong);
 }
 .model-facts .wide {
@@ -1714,7 +1714,7 @@ body:has(.hero) .header {
 }
 .model-facts dt {
   color: var(--faint);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -1724,22 +1724,21 @@ body:has(.hero) .header {
   font-size: 0.82rem;
 }
 .model-facts dd {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
 }
 [dir="rtl"] .model-facts dd[dir="ltr"] {
   text-align: right;
-}
-.models-hint {
-  color: var(--faint);
-  font-size: 0.85rem;
 }
 @media (max-width: 900px) {
   .models {
     grid-template-columns: minmax(0, 1fr);
     align-items: start;
   }
-  .orbit {
+  .orbit-wrap {
     display: none;
+  }
+  .model-static {
+    margin-top: 0.4rem;
   }
   .tier-lists {
     display: grid;

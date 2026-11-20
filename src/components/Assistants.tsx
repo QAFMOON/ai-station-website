@@ -23,7 +23,6 @@ export function Assistants({ t, sample, copy, copied }: { t: Dictionary["suite"]
   return (
     <div className="assist-layout">
       <div className="assist-aside">
-        <p className="eyebrow">03</p>
         <h2 className="h2">{t.title}</h2>
         <p className="section-lead">{t.lead}</p>
       </div>

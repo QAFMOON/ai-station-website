@@ -1,75 +1,15 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { models, type ModelFacts, type ModelId } from "@/data/models";
 import type { Dictionary } from "@/i18n";
 
-// Layers from the centre out: flagship, Arabic, mid-size and speech, small, everything else.
-// Every layer is one or more real rings: logos sit evenly spaced on the circle line itself.
-// The flagship layer is a centre logo plus two rings. Rings are equally far apart, like a radar
-// target, and the logo size comes from the tightest ring so every ring has the same breathing space.
-// Sizes and distances are percentages of the orbit width.
-const SIZE = [1, 1, 0.95, 0.9, 0.85]; // logo size per layer, relative
-const CLEAR = 1.45; // minimum distance between neighbours on a ring, in logo widths
-const RADIAL = 1.45; // minimum distance between rings, in logo widths
-const EDGE = 48.5; // the outermost logo must end inside this radius
-const TURN = 160; // seconds for one full clockwise turn. Every ring turns together, so the pattern holds its shape.
-
-type Ring = { layer: number; models: ModelFacts[]; r: number; tile: number; start: number; turn: number };
-
-// How many logos go on each ring of a layer.
-function plan(n: number, layer: number) {
-  if (layer === 0 && n >= 12) return [1, 6, n - 7];
-  if (layer === 0 && n >= 8) return [1, n - 1];
-  if (n > 12 && layer !== 3) {
-    const inner = Math.round(n * 0.4);
-    return [inner, n - inner];
-  }
-  return [n];
-}
-
-function build(byLayer: ModelFacts[][]) {
-  const specs: { layer: number; models: ModelFacts[]; j: number }[] = [];
-  byLayer.forEach((list, layer) => {
-    let at = 0;
-    plan(list.length, layer).forEach((count, j) => {
-      if (count > 0) specs.push({ layer, models: list.slice(at, at + count), j });
-      at += count;
-    });
-  });
-  const centred = specs[0]?.models.length === 1;
-  const circles = specs.length - (centred ? 1 : 0); // rings drawn as circles
-  // Equal steps between rings. Find the logo size and step that satisfy every ring.
-  let T = 6;
-  let step = EDGE / circles;
-  for (let i = 0; i < 6; i++) {
-    step = (EDGE - 0.6 * T * SIZE[specs[specs.length - 1]!.layer]!) / circles;
-    let best = Infinity;
-    specs.forEach((sp, idx) => {
-      const k = centred ? idx : idx + 1; // 0 for the centre logo
-      if (k === 0) return;
-      const n = sp.models.length;
-      const chord = 2 * k * step * Math.sin(Math.PI / n);
-      best = Math.min(best, chord / (CLEAR * SIZE[sp.layer]!));
-      const prev = specs[idx - 1];
-      if (prev) best = Math.min(best, (2 * step) / (RADIAL * (SIZE[sp.layer]! + SIZE[prev.layer]!)));
-    });
-    T = best;
-  }
-  return specs.map((sp, idx): Ring => {
-    const k = centred ? idx : idx + 1;
-    return {
-      layer: sp.layer,
-      models: sp.models,
-      r: k === 0 ? 0 : k * step,
-      tile: T * SIZE[sp.layer]!,
-      start: -90,
-      turn: TURN,
-    };
-  });
-}
-
+// Arcs rising from the bottom, like a dome: a particle globe in the middle, four arcs of logos
+// around it (flagship, Arabic, mid-size and speech, small and more). Every arc turns clockwise;
+// logos counter-turn so they stay upright. Hovering a logo pauses everything and opens its card.
+// Distances are in percent of the stage width (cqw).
+const RADII = [40, 49, 58, 67];
+const TURN = [150, 190, 230, 270]; // seconds per full clockwise turn
 const r2 = (n: number) => Math.round(n * 100) / 100;
 const at = (r: number, deg: number) => {
   const a = (deg * Math.PI) / 180;
@@ -79,58 +19,183 @@ const at = (r: number, deg: number) => {
 function Logo({ m, size }: { m: ModelFacts; size?: number }) {
   return (
     <span className="m-logo" style={size ? { width: size, height: size } : undefined}>
-      <Image src={`/images/models/${m.logo}.webp`} alt="" width={128} height={128} />
+      {/* A plain image: the logos are already small, and it always loads inside the hover card. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={`/images/models/${m.logo}.webp`} alt="" width={128} height={128} loading="eager" decoding="async" />
     </span>
   );
 }
 
+// A dense shell of dots, turning slowly. Only its top half shows: the stage cuts it at the bottom.
+function Globe() {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const cv = ref.current;
+    const ctx = cv?.getContext("2d");
+    if (!cv || !ctx) return;
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const N = 6500;
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+    const pts = Array.from({ length: N }, (_, i) => {
+      const y = 1 - (i / (N - 1)) * 2;
+      const rad = Math.sqrt(1 - y * y);
+      const th = i * 2.399963;
+      const k = 0.8 + rnd() * 0.2;
+      const t = rnd();
+      return { x: Math.cos(th) * rad * k, y: y * k, z: Math.sin(th) * rad * k, tone: t < 0.5 ? 0 : t < 0.8 ? 1 : 2, d: 0.7 + rnd() * 1.1 };
+    });
+    let raf = 0;
+    let ang = 0.6;
+    let cols: string[] = [];
+    const draw = () => {
+      const s = cv.clientWidth;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (cv.width !== Math.round(s * dpr)) {
+        cv.width = Math.round(s * dpr);
+        cv.height = Math.round(s * dpr);
+        const cs = getComputedStyle(cv);
+        cols = [cs.getPropertyValue("--g1"), cs.getPropertyValue("--g2"), cs.getPropertyValue("--g3")].map((c) => c.trim());
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, s, s);
+      const R = s * 0.5;
+      const c = Math.cos(ang);
+      const sn = Math.sin(ang);
+      for (const p of pts) {
+        const x = p.x * c + p.z * sn;
+        const z = -p.x * sn + p.z * c;
+        ctx.globalAlpha = 0.3 + 0.7 * ((z + 1) / 2);
+        ctx.fillStyle = cols[p.tone] || "#888";
+        const d = p.d * (s / 480);
+        ctx.fillRect(s / 2 + x * R, s / 2 + p.y * R, d, d);
+      }
+      if (!still) {
+        ang += 0.002;
+        raf = requestAnimationFrame(draw);
+      }
+    };
+    draw();
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return <canvas ref={ref} className="orbit-globe" aria-hidden="true" />;
+}
+
+type Tip = { id: ModelId; x: number; y: number; below: boolean };
+
 export function ModelOrbit({ t }: { t: Dictionary["models"] }) {
+  const [tip, setTip] = useState<Tip | null>(null);
   const [sel, setSel] = useState<ModelId>("jais-2-70b");
+  const wrapRef = useRef<HTMLDivElement>(null);
   const info = (id: ModelId) => t.items.find((i) => i.id === id)!;
-  const cur = models.find((m) => m.id === sel)!;
-  const curInfo = info(sel);
-  const byRing = [0, 1, 2, 3, 4].map((r) => models.filter((m) => m.ring === r));
-  const ringList = build(byRing);
+  const byRing = [0, 1, 2, 3].map((r) => models.filter((m) => m.ring === r));
+
+  const open = (m: ModelFacts, el: HTMLElement) => {
+    const o = wrapRef.current;
+    if (!o) return;
+    const ob = o.getBoundingClientRect();
+    const b = el.getBoundingClientRect();
+    const cy = b.top + b.height / 2 - ob.top;
+    const below = cy < ob.height * 0.55;
+    setTip({
+      id: m.id,
+      x: Math.min(Math.max(b.left + b.width / 2 - ob.left, 170), ob.width - 170),
+      y: below ? b.bottom - ob.top + 12 : b.top - ob.top - 12,
+      below,
+    });
+  };
+
+  const Card = ({ id }: { id: ModelId }) => {
+    const m = models.find((x) => x.id === id)!;
+    const i = info(id);
+    return (
+      <div className="model-card">
+        <p className="model-tier">
+          <span className="tier-text">
+            <b>{t.tiers[m.ring]!.label}</b> · {t.tiers[m.ring]!.range}
+          </span>
+        </p>
+        <div className="model-card-head">
+          <Logo m={m} size={52} />
+          <div>
+            <h3>{m.name}</h3>
+            <p>
+              {t.labels.maker} <bdi>{m.maker}</bdi>
+            </p>
+          </div>
+        </div>
+        <span className="chip chip-hot">{i.tag}</span>
+        <p className="model-use">{i.use}</p>
+        <dl className="model-facts">
+          {m.size && (
+            <div>
+              <dt>{t.labels.size}</dt>
+              <dd dir="ltr">{m.size}</dd>
+            </div>
+          )}
+          {m.active && (
+            <div>
+              <dt>{t.labels.active}</dt>
+              <dd dir="ltr">{m.active}</dd>
+            </div>
+          )}
+          <div>
+            <dt>{t.labels.license}</dt>
+            <dd dir="ltr">{m.license}</dd>
+          </div>
+          {m.context && (
+            <div>
+              <dt>{t.labels.context}</dt>
+              <dd dir="ltr">{m.context}</dd>
+            </div>
+          )}
+          <div className="wide">
+            <dt>{t.labels.runs}</dt>
+            <dd>{i.runs}</dd>
+          </div>
+        </dl>
+      </div>
+    );
+  };
 
   return (
     <div className="models">
-      <div className="orbit-wrap">
-        {/* Desktop: the orbit */}
+      <h2 className="h2 models-title-h">{t.title}</h2>
+      <p className="section-lead models-lead">{t.lead}</p>
+
+      <div className={`orbit-wrap${tip ? " is-paused" : ""}`} ref={wrapRef}>
         <div className="orbit" role="group" aria-label={t.title}>
-          <svg className="orbit-rings" viewBox="0 0 100 100" aria-hidden="true">
-            {ringList
-              .filter((rg) => rg.r > 0)
-              .map((rg, i) => (
-                <circle
-                  key={i}
-                  className={`orbit-ring ring-${rg.layer}`}
-                  cx="50"
-                  cy="50"
-                  r={r2(rg.r)}
-                  style={{ animationDuration: `${rg.turn}s` }}
-                />
-              ))}
+          <svg className="orbit-arcs" viewBox="0 0 100 72" preserveAspectRatio="none" aria-hidden="true">
+            {RADII.map((r) => (
+              <circle key={r} cx="50" cy="72" r={r} className="orbit-arc" />
+            ))}
           </svg>
-          {ringList.map((rg, ri) => (
-            <div key={ri} className="orbit-layer" style={{ animationDuration: `${rg.turn}s` }}>
-              {rg.models.map((m, k) => {
-                const pos = rg.r === 0 ? { x: 50, y: 50 } : at(rg.r, rg.start + (k * 360) / rg.models.length);
+          <Globe />
+          {byRing.map((list, ri) => (
+            <div
+              key={ri}
+              className={`orbit-layer ring-${ri}`}
+              style={{ ["--r" as string]: String(RADII[ri]), animationDuration: `${TURN[ri]}s` }}
+            >
+              {list.map((m, k) => {
+                const pos = at(50, -90 + (ri % 2 ? 180 / list.length : 0) + (k * 360) / list.length);
                 return (
                   <button
                     key={m.id}
                     type="button"
-                    className={`node-m ring-${rg.layer}${sel === m.id ? " is-sel" : ""}`}
-                    style={{ left: `${pos.x}%`, top: `${pos.y}%`, ["--tile" as string]: String(r2(rg.tile)) }}
-                    aria-pressed={sel === m.id}
+                    className="node-m"
+                    style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
                     aria-label={m.name}
-                    onMouseEnter={() => setSel(m.id)}
-                    onFocus={() => setSel(m.id)}
-                    onClick={() => setSel(m.id)}
+                    aria-describedby={tip?.id === m.id ? "model-tip" : undefined}
+                    onMouseEnter={(e) => open(m, e.currentTarget)}
+                    onFocus={(e) => open(m, e.currentTarget)}
+                    onMouseLeave={() => setTip(null)}
+                    onBlur={() => setTip(null)}
+                    onClick={(e) => open(m, e.currentTarget)}
                   >
                     {/* Turns the other way at the same speed, so the logo stays upright. */}
-                    <span className="node-inner" style={{ animationDuration: `${rg.turn}s` }}>
+                    <span className="node-inner" style={{ animationDuration: `${TURN[ri]}s` }}>
                       <Logo m={m} />
-                      <span className="node-name">{m.short}</span>
                     </span>
                   </button>
                 );
@@ -139,78 +204,33 @@ export function ModelOrbit({ t }: { t: Dictionary["models"] }) {
           ))}
         </div>
 
-        {/* Phones: the same models as three tiers */}
-        <div className="tier-lists">
-          {t.tiers.map((tier, ri) => byRing[ri]!.length > 0 && (
-            <div key={tier.label} className={`tier-list ring-${ri}`}>
-              <p className="tier-head">
-                <b>{tier.label}</b> · {tier.range}
-              </p>
-              <div className="tier-grid">
-                {byRing[ri]!.map((m) => (
-                  <button key={m.id} type="button" className={`tier-item${sel === m.id ? " is-sel" : ""}`} aria-pressed={sel === m.id} onClick={() => setSel(m.id)}>
-                    <Logo m={m} size={36} />
-                    <span>{m.short}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        {tip && (
+          <div id="model-tip" role="tooltip" className={`model-pop${tip.below ? " below" : ""}`} style={{ left: tip.x, top: tip.y }}>
+            <Card id={tip.id} />
+          </div>
+        )}
       </div>
 
-      <aside className="model-panel">
-        <div className="model-card" aria-live="polite">
-          <p className="model-tier">
-            <span className="tier-dot" aria-hidden="true">
-              <i style={{ width: [20, 17, 14, 11, 8][cur.ring], height: [20, 17, 14, 11, 8][cur.ring] }} />
-            </span>
-            <span className="tier-text">
-              <b>{t.tiers[cur.ring]!.label}</b> · {t.tiers[cur.ring]!.range}
-            </span>
-          </p>
-          <div className="model-card-head">
-            <Logo m={cur} size={52} />
-            <div>
-              <h3>{cur.name}</h3>
-              <p>
-                {t.labels.maker} <bdi>{cur.maker}</bdi>
-              </p>
+      <div className="tier-lists">
+        {t.tiers.map((tier, ri) => (
+          <div key={tier.label} className={`tier-list ring-${ri}`}>
+            <p className="tier-head">
+              <b>{tier.label}</b> · {tier.range}
+            </p>
+            <div className="tier-grid">
+              {byRing[ri]!.map((m) => (
+                <button key={m.id} type="button" className={`tier-item${sel === m.id ? " is-sel" : ""}`} aria-pressed={sel === m.id} onClick={() => setSel(m.id)}>
+                  <Logo m={m} size={36} />
+                  <span>{m.short}</span>
+                </button>
+              ))}
             </div>
           </div>
-          <span className="chip chip-hot">{curInfo.tag}</span>
-          <p className="model-use">{curInfo.use}</p>
-          <dl className="model-facts">
-            {cur.size && (
-              <div>
-                <dt>{t.labels.size}</dt>
-                <dd dir="ltr">{cur.size}</dd>
-              </div>
-            )}
-            {cur.active && (
-              <div>
-                <dt>{t.labels.active}</dt>
-                <dd dir="ltr">{cur.active}</dd>
-              </div>
-            )}
-            <div>
-              <dt>{t.labels.license}</dt>
-              <dd dir="ltr">{cur.license}</dd>
-            </div>
-            {cur.context && (
-              <div>
-                <dt>{t.labels.context}</dt>
-                <dd dir="ltr">{cur.context}</dd>
-              </div>
-            )}
-            <div className="wide">
-              <dt>{t.labels.runs}</dt>
-              <dd>{curInfo.runs}</dd>
-            </div>
-          </dl>
+        ))}
+        <div className="model-static">
+          <Card id={sel} />
         </div>
-        <p className="models-hint">{t.hint}</p>
-      </aside>
+      </div>
     </div>
   );
 }
