@@ -1,23 +1,23 @@
+import Image from "next/image";
 import type { Dictionary } from "@/i18n";
 import type { Locale } from "@/site.config";
+import { models, type ModelId } from "@/data/models";
 import { Arrow } from "./Arrow";
-import Image from "next/image";
+import { HeroGrid } from "./HeroGrid";
+import { ResultsShowcase } from "./ResultsShowcase";
 
-const icons = [
-  <path key="a" d="M12 3 4.5 6v5.5c0 4.4 3.1 8 7.5 9.5 4.4-1.5 7.5-5.1 7.5-9.5V6L12 3Zm-3 9 2.2 2.2L15.5 10" />,
-  <path key="b" d="M4 7l8-4 8 4-8 4-8-4Zm0 5 8 4 8-4M4 17l8 4 8-4" />,
-  <path key="c" d="M5 4h14v16H5zM8.5 9h7M8.5 13h7M8.5 17h4" />,
-];
+// A spread of makers, including Arabic-first models, shown as "runs any open model".
+const STRIP: ModelId[] = ["deepseek-v4-pro", "gpt-oss-120b", "mistral-small-4", "nemotron-3-ultra", "qwen3-8-27b", "gemma-4-31b", "jais-2-70b", "allam-7b"];
 
-// An optional looping video can sit behind the hero: set heroVideo in site.config.ts.
+// Centred hero: say what it does, then show what you get (the results as real app windows),
+// then the models behind it. An optional looping video can sit behind it: set heroVideo in site.config.ts.
 export function Hero({ t, locale, video }: { t: Dictionary; locale: Locale; video?: string }) {
+  const strip = STRIP.map((id) => models.find((m) => m.id === id)).filter((m) => m !== undefined);
   return (
-    <section className="hero">
+    <section className="hero hero-centre">
       <div className="hero-bg" aria-hidden="true">
-        {/* Photo: Pexels, free for commercial use. Replace public/images/hero-rack.jpg with your own site photo when you have one. */}
-        <Image src="/images/hero-rack.jpg" alt="" fill priority sizes="100vw" className="hero-photo" />
-        {video && <video className="hero-video" src={video} poster="/images/hero-rack.jpg" autoPlay muted loop playsInline preload="metadata" />}
-        <div className="hero-scrim" />
+        <HeroGrid />
+        {video && <video className="hero-video" src={video} autoPlay muted loop playsInline preload="metadata" />}
       </div>
       <div className="wrap">
         <div className="hero-copy">
@@ -33,21 +33,48 @@ export function Hero({ t, locale, video }: { t: Dictionary; locale: Locale; vide
             </a>
           </div>
         </div>
-        <ul className="badges">
-          {t.hero.badges.map((b, i) => (
+
+        <div id="results" className="results">
+          <ResultsShowcase t={t.hero.results} prompt={t.api.prompt} copy={t.api.copy} copied={t.api.copied} />
+        </div>
+
+        <div className="hero-models">
+          <p>{t.hero.results.modelsLabel}</p>
+          <ul>
+            {strip.map((m) => (
+              <li key={m.id}>
+                <span className="m-logo">
+                  <Image src={`/images/models/${m.logo}.webp`} alt="" width={64} height={64} />
+                </span>
+                <bdi>{m.short}</bdi>
+              </li>
+            ))}
+            <li className="hero-models-more">
+              <a href={`/${locale}#models`}>
+                {t.hero.results.modelsMore} <Arrow />
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <ul className="hero-trust">
+          {t.hero.badges.map((b) => (
             <li key={b.title}>
-              <span className="badge-icon">
-                <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                  {icons[i]}
-                </svg>
-              </span>
-              <div>
-                <h3>{b.title}</h3>
-              </div>
+              <Check />
+              <b>{b.title}</b>
+              <span>{b.text}</span>
             </li>
           ))}
         </ul>
       </div>
     </section>
+  );
+}
+
+function Check() {
+  return (
+    <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="m3.5 8.5 3 3 6-7" />
+    </svg>
   );
 }
