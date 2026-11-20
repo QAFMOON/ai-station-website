@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { models, type ModelFacts, type ModelId } from '@/data/models';
 import type { Dictionary } from '@/i18n';
+import { CellArt } from './CellCards';
 
 // Arcs rising from the bottom, like a dome: a particle globe in the middle, four arcs of logos
 // around it (flagship, Arabic, mid-size and speech, small and more). Every arc turns clockwise;
@@ -105,6 +106,16 @@ export function ModelOrbit({ t }: { t: Dictionary['models'] }) {
   const hot = tip ? models.find((m) => m.id === tip.id) : undefined;
   const ringAngle = (ri: number, k: number) => -90 + (ri % 2 ? 180 / byRing[ri]!.length : 0) + (k * 360) / byRing[ri]!.length;
 
+  // On a phone there is no hover: a tap opens the card, a tap anywhere else closes it.
+  useEffect(() => {
+    if (!tip) return;
+    const close = (e: PointerEvent) => {
+      if (!(e.target as HTMLElement).closest('.node-m, .model-pop')) setTip(null);
+    };
+    document.addEventListener('pointerdown', close);
+    return () => document.removeEventListener('pointerdown', close);
+  }, [tip]);
+
   const open = (m: ModelFacts, el: HTMLElement) => {
     const o = wrapRef.current;
     if (!o) return;
@@ -125,6 +136,7 @@ export function ModelOrbit({ t }: { t: Dictionary['models'] }) {
     const i = info(id);
     return (
       <div className='model-card'>
+        <CellArt seed={id.length + 4} />
         <p className='model-tier'>
           <span className='tier-text'>
             <b>{t.tiers[m.ring]!.label}</b> · {t.tiers[m.ring]!.range}

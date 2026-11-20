@@ -52,6 +52,7 @@ export function LaunchFooter({ name }: { name: string }) {
     let cx = 0; // rocket centre x
     let gy = 0; // ground (top of the pad base)
     let band = 400; // height of the dot field along the bottom
+    let rateK = 1; // smoke amount: lighter on phones
     let climb = 3.6; // seconds the rocket takes to leave the footer: longer for a taller footer
     const rgba = (c: [number, number, number], a: number) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
@@ -71,8 +72,10 @@ export function LaunchFooter({ name }: { name: string }) {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * dpr);
       cv.height = Math.round(H * dpr);
-      P_ = W < 640 ? 6 : 7;
-      Q = W < 640 ? 11 : 14;
+      const small = W < 640;
+      P_ = small ? 5 : 7; // finer dots on a phone, so the name stays crisp
+      Q = small ? 10 : 14;
+      rateK = small ? 0.55 : 1;
       // The rocket stands to the right of the link columns. The dot field is the bottom band of the footer (the spacer's height).
       cx = W * (W < 640 ? 0.8 : W < 1000 ? 0.84 : 0.87);
       gy = H - Q * 2.6;
@@ -85,14 +88,17 @@ export function LaunchFooter({ name }: { name: string }) {
       text.height = Math.round(H);
       const tc = text.getContext("2d")!;
       const font = (s: number) => `800 ${s}px "Manrope Variable", "Manrope", system-ui, sans-serif`;
-      let fs = band * 1.08;
+      // Desktop: the name at the left, its foot cut off by the bottom edge. Phone: the whole name across the width, in full.
+      let fs = small ? 100 : band * 1.08;
       tc.font = font(fs);
       const w = tc.measureText(name).width;
-      const maxW = W * (W < 640 ? 0.62 : 0.64);
-      if (w > maxW) fs *= maxW / w;
+      const maxW = W * (small ? 0.92 : 0.64);
+      if (small || w > maxW) fs *= maxW / w;
       tc.font = font(fs);
       tc.fillStyle = "#000";
-      tc.fillText(name, Math.max(16, W * 0.03), H + fs * 0.04);
+      const base = small ? H - fs * 0.14 : H + fs * 0.04;
+      tc.fillText(name, small ? (W - maxW) / 2 : Math.max(16, W * 0.03), base);
+      if (small) gy = base - fs * 0.73 - Q * 1.8; // the pad stands on top of the name
       const alpha = tc.getImageData(0, 0, text.width, text.height).data;
 
       const f = document.createElement("canvas");
@@ -104,7 +110,7 @@ export function LaunchFooter({ name }: { name: string }) {
       const rows = Math.ceil(H / P_);
       for (let r = 0; r < rows; r++) {
         const bt = (r * P_ - (H - band)) / band; // 0 at the top of the field, 1 at the bottom of the footer
-        const d = bt <= 0 ? 0 : Math.pow(Math.max(0, (bt - 0.06) / 0.94), 1.5);
+        const d = bt <= 0 ? 0 : Math.pow(Math.max(0, (bt - 0.06) / 0.94), small ? 1.1 : 1.5);
         for (let c = 0; c < cols; c++) {
           if (hash(c, r) >= d) continue;
           const x = c * P_ + P_ / 2;
@@ -114,7 +120,7 @@ export function LaunchFooter({ name }: { name: string }) {
           if (alpha[(ay * text.width + ax) * 4 + 3] > 110) continue; // the name is cut out
           fc.fillStyle = rgba(accent, 0.3 + 0.55 * d);
           fc.beginPath();
-          fc.arc(x, y, P_ * (0.17 + 0.15 * d), 0, Math.PI * 2);
+          fc.arc(x, y, P_ * (small ? 0.2 + 0.17 * d : 0.17 + 0.15 * d), 0, Math.PI * 2);
           fc.fill();
         }
       }
@@ -181,20 +187,20 @@ export function LaunchFooter({ name }: { name: string }) {
       // spawn
       if (!still && dt > 0) {
         const padRate = t < IGNITE ? 7 : t < LIFTOFF ? 95 : t < LIFTOFF + 2.4 ? 70 : t < LIFTOFF + 3.6 ? 22 : 4;
-        acc[0] += padRate * dt;
+        acc[0] += padRate * rateK * dt;
         while (acc[0] >= 1) {
           acc[0]--;
           const dir = Math.random() < 0.5 ? -1 : 1;
           spawnSmoke(cx + (Math.random() - 0.5) * 9 * Q, gy - Q * 0.6, dir * (35 + Math.random() * 150), -(8 + Math.random() * 46), 26 + Math.random() * 30, 2 + Math.random() * 1.8);
         }
         if (burning) {
-          acc[1] += 150 * dt;
+          acc[1] += 150 * rateK * dt;
           while (acc[1] >= 1) {
             acc[1]--;
             parts.push({ x: cx + (Math.random() - 0.5) * 2.6 * Q, y: ry + ROCKET.length * Q + 2, vx: (Math.random() - 0.5) * 44, vy: 190 + Math.random() * 170, age: 0, life: 0.32 + Math.random() * 0.4, r0: Q * 0.42, r1: Q * 0.1, kind: 1, seed: 0 });
           }
           if (t >= LIFTOFF) {
-            acc[2] += 26 * dt;
+            acc[2] += 26 * rateK * dt;
             while (acc[2] >= 1) {
               acc[2]--;
               spawnSmoke(cx + (Math.random() - 0.5) * 1.6 * Q, ry + ROCKET.length * Q + 10, (Math.random() - 0.5) * 36, 18 + Math.random() * 30, 14 + Math.random() * 14, 1.6 + Math.random() * 1.2);

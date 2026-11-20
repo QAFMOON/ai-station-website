@@ -55,7 +55,7 @@ const hash = (a: number, b: number, c: number) => {
 };
 
 // An 8 × 5 field of 40-unit cells: grid lines, a few cells shaded, two that light up on hover.
-function CellArt({ seed }: { seed: number }) {
+export function CellArt({ seed }: { seed: number }) {
   const shaded: ReactNode[] = [];
   const lit: ReactNode[] = [];
   for (let y = 0; y < 5; y++)

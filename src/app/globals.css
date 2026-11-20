@@ -1673,20 +1673,25 @@ body:has(.hero) .header {
   display: none;
 }
 .model-card {
-  padding: 1.3rem;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
-  background: var(--surface);
+  position: relative;
+  overflow: hidden;
   display: grid;
-  gap: 0.85rem;
-  justify-items: start;
+  justify-items: stretch;
+  gap: 0;
+  padding: 0;
+  border: 1px dashed var(--frame-line);
+  border-radius: 0;
+  background: var(--bg);
 }
 .model-tier {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  padding: 0.75rem 1.1rem;
+  border-bottom: 1px dashed var(--frame-line);
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
 .model-tier b {
   color: var(--ink);
@@ -1705,9 +1710,11 @@ body:has(.hero) .header {
   border-radius: 50%;
 }
 .model-card-head {
+  position: relative;
   display: flex;
   gap: 1rem;
   align-items: center;
+  padding: 1.1rem 1.1rem 0.6rem;
 }
 .model-card h3 {
   font-size: 1.25rem;
@@ -1719,19 +1726,34 @@ body:has(.hero) .header {
   font-size: 0.86rem;
 }
 .model-use {
+  position: relative;
+  padding: 0.6rem 1.1rem 1.1rem;
   color: var(--ink);
   font-size: 0.95rem;
 }
 .model-facts {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem 1.2rem;
+  gap: 0;
   width: 100%;
-  padding-top: 0.9rem;
-  border-top: 1px dashed var(--frame-line);
 }
 .model-facts .wide {
   grid-column: 1 / -1;
+  border-inline-start: 0 !important;
+}
+.model-facts > div {
+  padding: 0.75rem 1.1rem;
+  border-top: 1px dashed var(--frame-line);
+}
+.model-facts > div:nth-child(even) {
+  border-inline-start: 1px dashed var(--frame-line);
+}
+.model-card > .chip {
+  position: relative;
+  justify-self: start;
+  margin-inline: 1.1rem;
+  border: 1px dashed var(--frame-line);
 }
 .model-facts dt {
   color: var(--faint);
@@ -1755,45 +1777,17 @@ body:has(.hero) .header {
     grid-template-columns: minmax(0, 1fr);
     align-items: start;
   }
+  /* The orbit stays an orbit on a phone. The dome is drawn wider than the screen, so the logos stay a readable size and you see
+     its middle; the rings carry on past both edges. Tap a logo for its card. */
   .orbit-wrap {
-    display: none;
+    overflow-x: clip;
   }
-  .model-static {
-    margin-top: 0.4rem;
+  .orbit {
+    width: 170%;
+    margin-inline: -35%;
   }
-  .tier-lists {
-    display: grid;
-    gap: 1.6rem;
-  }
-  .tier-head {
-    margin-bottom: 0.7rem;
-    color: var(--muted);
-    font-size: 0.9rem;
-  }
-  .tier-head b {
-    color: var(--ink);
-    font-weight: 600;
-  }
-  .tier-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.6rem;
-  }
-  .tier-item {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.6rem;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    background: transparent;
-    color: var(--ink);
-    text-align: start;
-    cursor: pointer;
-    font-size: 0.85rem;
-  }
-  .tier-item.is-sel {
-    border-color: var(--accent);
+  .model-pop {
+    width: min(340px, 94%);
   }
 }
 
@@ -2208,17 +2202,53 @@ body:has(.hero) .header {
   color: var(--teal);
   text-underline-offset: 3px;
 }
+/* Contact form: one dashed grid of cells, like the cards. A label and its input share a cell, and focus lights the cell. */
 .form {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2.2rem 2.5rem;
+  border: 1px dashed var(--frame-line);
 }
 .field {
+  position: relative;
   display: grid;
-  gap: 0.2rem;
+  gap: 0.15rem;
+  padding: 1.1rem 1.3rem 0.7rem;
+  border-inline-end: 1px dashed var(--frame-line);
+  border-bottom: 1px dashed var(--frame-line);
+  transition: background 0.25s;
+}
+.field:nth-child(even),
+.field-wide {
+  border-inline-end: 0;
 }
 .field-wide {
   grid-column: 1 / -1;
+}
+.field:focus-within {
+  background: var(--field);
+}
+/* a small square marks the cell you are typing in, like the squares on the timeline */
+.field::after {
+  content: "";
+  position: absolute;
+  top: 1.15rem;
+  inset-inline-end: 1.2rem;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.2s, transform 0.3s var(--ease);
+}
+.field:focus-within::after {
+  opacity: 1;
+  transform: none;
+}
+.field:has([aria-invalid="true"]) {
+  box-shadow: inset 0 -2px 0 var(--danger);
+}
+.field:has([aria-invalid="true"]) label {
+  color: var(--danger);
 }
 .field label {
   font-size: 0.75rem;
@@ -2235,30 +2265,28 @@ body:has(.hero) .header {
 .field select,
 .field textarea {
   width: 100%;
-  padding: 0.85rem 0 0.7rem;
+  padding: 0.4rem 0 0.5rem;
   border: 0;
-  border-bottom: 1px solid var(--line-strong);
   border-radius: 0;
   background: transparent;
   font-size: 1.05rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
 }
 .field input,
 .field select {
-  height: 3.1rem;
+  height: 2.7rem;
 }
 .field input::placeholder {
   color: var(--faint);
 }
 .field textarea {
-  min-height: 8rem;
+  min-height: 9rem;
   resize: vertical;
 }
 .field select {
   appearance: none;
   -webkit-appearance: none;
   padding-inline-end: 1.8rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none' stroke='%23a4b3af' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 5 4 4 4-4'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none' stroke='%23888888' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 5 4 4 4-4'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.1rem center;
   cursor: pointer;
@@ -2273,15 +2301,6 @@ body:has(.hero) .header {
 .field select:focus,
 .field textarea:focus {
   outline: 0;
-  border-bottom-color: var(--accent);
-  box-shadow: 0 1px 0 var(--accent);
-}
-.field [aria-invalid="true"] {
-  border-bottom-color: var(--danger);
-}
-.field [aria-invalid="true"]:focus {
-  border-bottom-color: var(--danger);
-  box-shadow: 0 1px 0 var(--danger);
 }
 .req {
   color: var(--accent);
@@ -2293,6 +2312,7 @@ body:has(.hero) .header {
   align-content: center;
   gap: 1rem;
   min-height: 18rem;
+  padding: 2.2rem;
   color: var(--accent);
 }
 .form-done p {
@@ -2300,13 +2320,11 @@ body:has(.hero) .header {
   font-size: 1.15rem;
   max-width: 32ch;
 }
-/* Send: full-width outlined button, fills on hover */
+/* Send: a full-width primary button in the last cell */
 .btn-send {
   width: 100%;
   padding: 1.15rem 1.5rem;
   border-radius: 10px;
-  background: transparent;
-  color: var(--accent);
   font-size: 0.9rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -2317,8 +2335,6 @@ body:has(.hero) .header {
   font-size: 1rem;
 }
 .btn-send:hover {
-  background: var(--accent);
-  color: var(--accent-ink);
   box-shadow: none;
   transform: none;
 }
@@ -2328,10 +2344,11 @@ body:has(.hero) .header {
 }
 .form-foot {
   display: grid;
-  gap: 1rem;
+  gap: 0.8rem;
+  padding: 1.2rem 1.3rem 1.3rem;
 }
 .form-status {
-  min-height: 1.4rem;
+  min-height: 1.2rem;
   font-size: 0.92rem;
   color: var(--muted);
 }
@@ -2347,6 +2364,9 @@ body:has(.hero) .header {
 @media (max-width: 560px) {
   .form {
     grid-template-columns: 1fr;
+  }
+  .field {
+    border-inline-end: 0;
   }
 }
 
@@ -3379,7 +3399,8 @@ body:has(.hero) .header {
   animation: logo-launch 2.4s linear infinite;
 }
 .logo:hover .logo-puff {
-  animation: logo-puff 2.4s ease-out infinite backwards;
+  /* No fill-mode: a puff must stay hidden (its resting opacity is 0) until the rocket reaches it, then play. */
+  animation: logo-puff 2.4s ease-out infinite;
   animation-delay: var(--d);
 }
 @keyframes logo-launch {
@@ -3438,5 +3459,24 @@ body:has(.hero) .header {
   .logo:hover .logo-mark,
   .logo:hover .logo-puff {
     animation: none;
+  }
+}
+
+/* The week axis stays in view under the navbar while you scroll the chart, on desktop and on a phone. */
+.gantt-head {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 4;
+  background: var(--bg);
+  border-bottom: 1px dashed var(--frame-line);
+}
+.gantt-head + .gantt-row {
+  border-top: 0;
+}
+
+/* The footer's field is taller on a phone, so the whole name fits across it. */
+@media (max-width: 640px) {
+  .footer-field {
+    height: 360px;
   }
 }
