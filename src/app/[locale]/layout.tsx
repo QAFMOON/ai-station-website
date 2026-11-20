@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       description: t.meta.description,
       url: `/${locale}`,
       siteName: site.name[locale],
-      locale: locale === "ar" ? "ar_AE" : "en_AE",
+      locale: locale === "ar" ? "ar_AR" : "en_GB",
       type: "website",
       images: [{ url: `/og-${locale}.png`, width: 1200, height: 630 }],
     },

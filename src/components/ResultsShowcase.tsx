@@ -238,7 +238,7 @@ function Api({ t, prompt, copy, copied }: { t: R; prompt: string; copy: string; 
           <span className="ui-title" dir="ltr">
             {cur.title}
           </span>
-          <span className="term-tabs" role="tablist" aria-label="Language">
+          <span className="term-tabs" role="tablist" aria-label={a.language}>
             {LANGS.map((l) => (
               <button key={l.id} type="button" role="tab" aria-selected={lang === l.id} className="term-tab" onClick={() => setLang(l.id)}>
                 {l.label}

@@ -26,7 +26,7 @@ Any host that runs Next.js works (Vercel, a Node server, or Docker). Set these e
 1. **Name.** "AI Station" is a working name. Check the trademark and domain, then change it in `src/site.config.ts`. Regenerate images with `python3 ../brand/make-assets.py`.
 2. **Contact details.** Replace `hello@example.com` and the LinkedIn URL in `src/site.config.ts`.
 3. **Legal entity.** Add the registered company name and licence number to `footer.legal` in `src/i18n/en.ts` and `ar.ts`, and review the privacy page with a lawyer.
-4. **Arabic review.** Have a native Gulf Arabic speaker read `src/i18n/ar.ts`.
+4. **Arabic review.** Have a native Arabic speaker read `src/i18n/ar.ts`.
 5. **Claims.** The copy describes the service after the four proofs in the technical guide pass. Remove anything you have not yet demonstrated. Do not add customer logos, testimonials or certifications you do not have.
 6. **Sources.** The two cited statistics link to their sources. Re-check the links.
 

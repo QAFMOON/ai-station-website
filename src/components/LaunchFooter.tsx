@@ -315,5 +315,5 @@ export function LaunchFooter({ name }: { name: string }) {
     };
   }, [name]);
 
-  return <canvas ref={ref} className="launch-canvas" role="img" aria-label={`${name}: a rocket lifting off from its launch pad`} />;
+  return <canvas ref={ref} className="launch-canvas" aria-hidden="true" />;
 }

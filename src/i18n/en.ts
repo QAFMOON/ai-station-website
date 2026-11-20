@@ -3,7 +3,7 @@ export const en = {
   meta: {
     title: 'AI Station — Private AI that runs inside your walls',
     description:
-      'Private Arabic and English AI for regulated companies in the Gulf. It runs on your own servers or in a private in-country cloud, and your data stays under your control.',
+      'Private AI for regulated organisations, in Arabic, English and more. It runs on your own servers or in a private in-country cloud, and your data stays under your control.',
   },
   nav: {
     models: 'Models',
@@ -45,7 +45,7 @@ export const en = {
         {
           tab: 'Chat',
           title: 'Ask a question, get an answer with its sources',
-          text: 'Staff chat in Arabic or English. The assistant can hand work to specialist agents and shows the sources behind every answer.',
+          text: 'Staff chat in Arabic, English and more. The assistant can hand work to specialist agents and shows the sources behind every answer.',
         },
         {
           tab: 'Agents',
@@ -75,6 +75,7 @@ export const en = {
       ],
       api: {
         chips: ['A key for every team', 'Budgets and limits', 'Any model behind it'],
+        language: 'Language',
         request: 'Request',
         response: 'Response',
         answer: 'Records are kept for seven years after the relationship ends.',
@@ -118,7 +119,7 @@ export const en = {
     items: [
       {
         q: 'Where is our data processed?',
-        a: 'On a server you choose: your own building, a private cloud, or an in-country data centre.',
+        a: 'On a server you choose: in your own building, or in a private cloud in an in-country data centre.',
       },
       {
         q: 'Who can see our documents?',
@@ -338,11 +339,11 @@ export const en = {
     items: [
       {
         title: 'Answers from your own documents',
-        text: 'Staff ask in Arabic or English and get answers drawn from your policies, procedures and regulations, with the source passage shown.',
+        text: 'Staff ask in their own language and get answers drawn from your policies, procedures and regulations, with the source passage shown.',
       },
       {
         title: 'Arabic that is tested, not assumed',
-        text: 'We test Arabic models from the region on your real questions before you rely on them, and show you the results.',
+        text: 'We test Arabic models on your real questions before you rely on them, and show you the results. We do the same for any other language you need.',
       },
       {
         title: 'A record of every question',
@@ -1126,7 +1127,7 @@ export const en = {
       {
         when: 'Weeks 2–3',
         title: 'Load and test',
-        text: 'We load your documents and test Arabic and English answers on 100 of your real questions.',
+        text: 'We load your documents and test answers in Arabic, English or the languages you need on 100 of your real questions.',
       },
       {
         when: 'Weeks 4–6',
@@ -1194,7 +1195,7 @@ export const en = {
     title: 'FAQs',
     items: [
       {
-        q: 'What is on-premise AI?',
+        q: 'What is on-premises AI?',
         a: 'AI that runs on servers inside your own premises, so your documents, questions and answers stay with you instead of going to a public AI service. AI Station installs it, runs it and looks after it for you. If you prefer, it can also run in a private in-country cloud.',
       },
       {
@@ -1219,7 +1220,7 @@ export const en = {
       },
       {
         q: 'How good is the Arabic?',
-        a: 'It depends on the model and the task, which is why we test first. Before going live you see scores on your own questions, in Arabic and in English.',
+        a: 'It depends on the model and the task, which is why we test first. Before going live you see scores on your own questions, in Arabic, in English or in any other language you need.',
       },
     ],
   },
@@ -1238,17 +1239,10 @@ export const en = {
     error: 'The request could not be sent. Try again, or write to',
     required: 'Fill in your name, work email and company.',
     orEmail: 'Or write to us at',
-  },
-  gulf: {
-    title: 'Ready to deploy AI you actually control?',
-    lead: 'Get a personalized demo for your organization.',
-    cta: 'Request a demo',
-    art: 'A Gulf city skyline beyond desert dunes at dusk',
-  },
-  footer: {
+  },  footer: {
     product: 'Product',
     company: 'Company',
-    tagline: 'Private AI for regulated organisations in the Gulf.',
+    tagline: 'Private AI for regulated organisations.',
     privacy: 'Privacy',
     rights: 'All rights reserved.',
   },
