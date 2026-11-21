@@ -18,9 +18,9 @@ Any host that runs Next.js works (Vercel, a Node server, or Docker). Set these e
 
 | Variable | Purpose |
 |---|---|
-| `NEXT_PUBLIC_SITE_URL` | Your real address, e.g. `https://aistation.ae`. Used for canonical links, hreflang, sitemap and share images. |
+| `NEXT_PUBLIC_SITE_URL` | Your real address, e.g. `https://www.aistationx.com`. Used for canonical links, hreflang, sitemap and share images. |
 | `CONTACT_WEBHOOK_URL` | Where demo requests are sent as JSON (Slack webhook, Zapier, n8n, your CRM). Without it, requests are only written to the server log. |
-| `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_ID` | Adds each demo request as a row in an Airtable table. The token needs the `data.records:write` scope. The table needs the text columns Name, Email, Company, Where would you run it, Message, Language and Received at (names can be changed at the top of `src/app/api/contact/route.ts`). Set these server-side only, never with a `NEXT_PUBLIC_` prefix. |
+| `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_ID` | Adds each demo, pilot or quote request as a row in an Airtable table. The token needs the `data.records:write` scope. The table needs the text columns Name, Email, Company, Inquiry type, Message, Language and Received at (names can be changed at the top of `src/app/api/contact/route.ts`). Set these server-side only, never with a `NEXT_PUBLIC_` prefix. |
 
 ## Before you publish
 

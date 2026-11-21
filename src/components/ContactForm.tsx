@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Dictionary } from "@/i18n";
 import { site, type Locale } from "@/site.config";
 import { Arrow } from "./Arrow";
@@ -8,9 +8,28 @@ import { Arrow } from "./Arrow";
 type Status = "idle" | "sending" | "sent" | "error" | "invalid";
 type FieldName = "name" | "email" | "company";
 
-export function ContactForm({ t, modes, locale }: { t: Dictionary["contact"]; modes: string[]; locale: Locale }) {
+export function ContactForm({ t, locale }: { t: Dictionary["contact"]; locale: Locale }) {
   const [status, setStatus] = useState<Status>("idle");
   const [bad, setBad] = useState<FieldName[]>([]);
+  const [inquiry, setInquiry] = useState(t.inquiries[0]!.id);
+  const current = t.inquiries.find((x) => x.id === inquiry) ?? t.inquiries[0]!;
+
+  // Buttons elsewhere on the page carry data-inquiry, so the form opens on the right request type.
+  // "quote" follows whichever plan the delivery timeline is showing.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const el = (e.target as Element | null)?.closest<HTMLElement>("[data-inquiry]");
+      if (!el) return;
+      let id = el.dataset.inquiry ?? "";
+      if (id === "quote") id = document.querySelector<HTMLElement>("[data-plan]")?.dataset.plan ?? "cloud";
+      if (t.inquiries.some((x) => x.id === id)) {
+        setInquiry(id);
+        setStatus((v) => (v === "sent" ? "idle" : v));
+      }
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, [t.inquiries]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -88,12 +107,11 @@ export function ContactForm({ t, modes, locale }: { t: Dictionary["contact"]; mo
         <input id="cf-company" name="company" autoComplete="organization" required aria-required="true" aria-invalid={invalid("company")} onChange={clear("company")} />
       </div>
       <div className="field">
-        <label htmlFor="cf-mode">{t.mode}</label>
-        <select id="cf-mode" name="mode" defaultValue="">
-          <option value="">{t.unsure}</option>
-          {modes.map((m) => (
-            <option key={m} value={m}>
-              {m}
+        <label htmlFor="cf-inquiry">{t.inquiry}</label>
+        <select id="cf-inquiry" name="inquiry" value={inquiry} onChange={(e) => setInquiry(e.target.value)}>
+          {t.inquiries.map((x) => (
+            <option key={x.id} value={x.id}>
+              {x.label}
             </option>
           ))}
         </select>
@@ -109,7 +127,7 @@ export function ContactForm({ t, modes, locale }: { t: Dictionary["contact"]; mo
       </div>
       <div className="field-wide form-foot">
         <button className="btn btn-send" type="submit" disabled={status === "sending"}>
-          {status === "sending" ? t.sending : t.submit} {status !== "sending" && <Arrow />}
+          {status === "sending" ? t.sending : current.submit} {status !== "sending" && <Arrow />}
         </button>
         <p className={`form-status${status === "error" || status === "invalid" ? " is-bad" : ""}`} role="status" aria-live="polite">
           {status === "invalid" && t.required}

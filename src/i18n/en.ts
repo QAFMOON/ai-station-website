@@ -3,7 +3,7 @@ export const en = {
   meta: {
     title: 'AIStationX — Private AI on servers you control',
     description:
-      'Private AI for regulated organisations: chat, agents, coding help and an API on open models, in your building or a private cloud in your country, tested on your own documents.',
+      'Private AI for banks, hospitals, government and law firms: chat, agents, coding help and an API on open models, on your own server or a private server in your country, tested on your own documents.',
   },
   nav: {
     models: 'Models',
@@ -13,24 +13,18 @@ export const en = {
     faq: 'Questions',
     cta: 'Book a demo',
     skip: 'Skip to content',
-    switchLabel: 'Arabic',
+    switchLabel: 'العربية',
     switchAria: 'View this site in Arabic',
     menu: 'Menu',
   },
   hero: {
-    kicker: 'Private AI your compliance team can say yes to',
-    title: 'Say yes to AI. We do all the work.',
-    lead: 'Most teams get stuck between "we want AI" and "it\'s running safely on our servers." We close that gap. We build the full stack, run it, and hand your teams a working assistant, coding help and an API.',
-    primary: 'See it on your documents',
-    secondary: 'See where it runs',
-    banner: {
-      tag: 'New',
-      text: 'A fixed-price four-week pilot. You only continue if it meets the measure we agree up front.',
-      link: 'See the plan',
-    },
+    title: "Private AI for organisations whose data can't leave their control.",
+    lead: "We install AI on your own server or a private one in your country, connect it to your documents, and run it for you.",
+    primary: 'Book a demo',
+    secondary: 'Try a two-week pilot',
     badges: [
-      { title: 'Four weeks', text: 'From kick-off to your staff using it' },
-      { title: 'Nothing to build', text: 'We install, run, update and monitor it' },
+      { title: 'Stays with you', text: 'On your server or a private server in your country' },
+      { title: 'One fixed fee', text: 'Never billed per question or per token' },
       { title: 'Proof first', text: 'Scored on your own questions before you commit' },
     ],
     results: {
@@ -41,33 +35,23 @@ export const en = {
       tabs: [
         {
           tab: 'Chat',
-          title: 'Answers you can check',
-          text: 'Staff ask in their own language and see the source behind each answer. The assistant can call on agents for bigger tasks.',
+          title: 'One chat for documents, search and speech',
+          text: "Ask, search or speak in your own language, with the source behind every answer.",
         },
         {
-          tab: 'Agents',
-          title: 'Hand over multi-step work',
-          text: 'An agent works through a task step by step with the tools you allow, inside the limits you set.',
+          tab: 'Agentic',
+          title: 'No more repeating the same work',
+          text: "Agents take repetitive, multi-step work off your team, within the limits you set.",
         },
         {
           tab: 'Code',
           title: 'Coding help that keeps code in-house',
-          text: 'Developers point VS Code (Cline, Kilo Code), OpenCode or any tool that accepts an OpenAI-compatible address at your server. Code never leaves it.',
+          text: "Use VS Code, Cline, Kilo Code or OpenCode with your server. Code never leaves it.",
         },
         {
-          tab: 'Voice',
-          title: 'Speak a question, hear the answer',
-          text: 'Dictate in the chat and have answers read aloud, processed on your own server. We test it on your own recordings first.',
-        },
-        {
-          tab: 'API',
-          title: 'One API, the OpenAI format',
-          text: 'Tools built for OpenAI work by changing the address and key. You can swap models behind it without changing your code.',
-        },
-        {
-          tab: 'MCP',
-          title: 'Connect your own systems',
-          text: 'Link internal systems through the open Model Context Protocol, so answers come from where your data lives. You set the permissions.',
+          tab: 'API & MCP',
+          title: 'Make the apps you already run intelligent',
+          text: "One OpenAI-compatible API for your apps, and MCP to connect your tools.",
         },
       ],
       api: {
@@ -83,10 +67,7 @@ export const en = {
         librechat: 'LibreChat, open source (MIT)',
         opencode: 'OpenCode in VS Code, open source (MIT)',
         kilo: 'Kilo Code, open source (MIT)',
-        stt: 'Speak your question',
-        tts: 'Hear any answer read aloud',
         mcpCatalog: 'Your connected tools',
-        mcpMenu: 'Switch them on in any chat',
         codeApi: 'Paste your own address and key',
         editorsLabel: 'Works with tools that accept an OpenAI-compatible address',
         editors: ['VS Code', 'Cline', 'Kilo Code', 'OpenCode'],
@@ -95,49 +76,52 @@ export const en = {
   },
   control: {
     kicker: 'Control',
-    title: 'Four questions every regulated company should be able to answer.',
+    title: 'Four questions your security and compliance teams will ask first.',
     items: [
       {
-        q: 'Where is our data processed?',
-        a: 'In your own building, or on a private server in a data centre in your country.',
+        q: 'Where is our data processed, and who else can reach it?',
+        a: 'In your building, or on a private server used only by you in a data centre in your country. The model runs on that server, so no outside AI company receives your questions or documents.',
       },
       {
-        q: 'Who can see our documents?',
-        a: 'Only people who sign in through your directory, with the access you give each team.',
+        q: 'Who can see what?',
+        a: 'Only your staff, signing in with the same work account they use for email, and only with the access you give each team. You can log every question and answer with the user and time.',
       },
       {
-        q: 'What will it cost?',
-        a: "A fixed price to set up and deploy, then a fixed monthly fee for maintenance, a fraction of the setup price. Never billed by tokens or per question. Tell us your use case and we'll send a quote.",
+        q: 'Can we forecast the cost?',
+        a: "Yes. A fixed price to set up, then a fixed monthly fee. Never billed per question or per token, so a busy month costs the same as a quiet one. Tell us your use case and we'll send a quote.",
       },
-      { q: 'Can we leave?', a: 'Yes. You get a handover pack, and the system keeps running without us.' },
+      {
+        q: 'Can we audit it, and can we leave?',
+        a: 'Yes. You get a written record of where each piece of data is stored and a handover pack. It is open-source software and open models, so it keeps running without us.',
+      },
     ],
   },
   get: {
     title: 'What your team gets',
     items: [
       {
-        title: 'Answers from your own documents',
-        text: 'From your policies, procedures and contracts, with the source shown.',
+        title: "Answers from your documents",
+        text: "Ask in plain words, in your own language. Each answer shows the page it came from. Documents stay on your server.",
       },
       {
-        title: 'Tested on your questions',
-        text: 'We score answers on your real questions before go-live, in the languages you need.',
+        title: "Agentic workflows",
+        text: "Agents carry out multi-step tasks for you, such as checking a document against a checklist, using only the tools you allow.",
       },
       {
-        title: 'An audit trail when you need one',
-        text: 'Switch on a record of every question and answer, with user and time, ready for audit or a regulator.',
+        title: "Connect your code editor",
+        text: "Use it in VS Code and similar editors to write, explain and run code. Your code never leaves your own server.",
       },
       {
-        title: 'One API for your own apps',
-        text: 'One standard API that works with tools built for OpenAI. Swap models behind it without rewriting anything.',
+        title: "One API for your apps",
+        text: "Your existing apps send a question and get an answer back, in OpenAI's format. Swap models later without changing code.",
       },
       {
-        title: 'Sign-in and limits by team',
-        text: 'People sign in with your own directory (Microsoft Entra ID or LDAP). Each team gets its own key, models and budget.',
+        title: "Connect your systems with MCP",
+        text: "Link internal systems through MCP servers, so answers use live data from where it lives. You decide what it can reach.",
       },
       {
-        title: 'Yours if we part ways',
-        text: 'Open-source software and open models, with a handover pack. If you stop working with us, it keeps running.',
+        title: "An audit trail you can switch on",
+        text: "Keep a record of every question and answer, with who asked and when, ready for an internal audit or a regulator.",
       },
     ],
   },
@@ -151,19 +135,38 @@ export const en = {
   },
   where: {
     title: 'Two ways to run it. One service.',
-    lead: 'The same assistant and API in both. Start in one and move to the other later.',
+    lead: 'You get the same assistant and the same API either way. The only difference is where the server sits.',
     options: [
-      { name: 'On-premises', sub: 'Your server room', icon: 'building' },
-      { name: 'Private cloud', sub: 'In-country data centre', icon: 'cloud' },
+      { name: 'On your premises', sub: 'The server sits in your own building', icon: 'building' },
+      { name: 'Private cloud', sub: 'A server only for you, in a data centre in your country', icon: 'cloud' },
     ],
     rows: [
-      { label: 'Dedicated to you alone', cells: [{ ok: true, text: 'Only you' }, { ok: true, text: 'Only you' }] },
-      { label: 'Works with the internet unplugged', cells: [{ ok: true, text: 'Not needed' }, { ok: false, text: 'Private tunnel' }] },
-      { label: 'Server in your own building', cells: [{ ok: true, text: 'Your server room' }, { ok: false, text: 'In-country data centre' }] },
-      { label: 'No hardware to buy', cells: [{ ok: false, text: 'Your own server' }, { ok: true, text: 'A fast start' }] },
+      {
+        label: 'Where is the server?',
+        cells: [{ ok: true, text: 'In your building' }, { ok: true, text: 'In a data centre in your country' }],
+      },
+      {
+        label: 'Does anyone else share it?',
+        cells: [{ ok: true, text: "No, it's only yours" }, { ok: true, text: "No, it's only yours" }],
+      },
+      {
+        label: 'Is your data sent to a public AI service?',
+        cells: [{ ok: true, text: 'No, never' }, { ok: true, text: 'No, never' }],
+      },
+      {
+        label: 'Does it need the internet?',
+        cells: [{ ok: true, text: 'No, it can run fully offline' }, { ok: false, text: 'Yes, through a private, encrypted connection' }],
+      },
+      {
+        label: 'Do you need to buy a server?',
+        cells: [{ ok: false, text: 'Yes, we tell you which one' }, { ok: true, text: 'No, we provide it' }],
+      },
     ],
     bestLabel: 'Best for',
-    best: ['Customer records, contracts, anything regulated', 'A fast start without buying hardware'],
+    best: [
+      'Your most sensitive data, such as patient records or classified files, or sites with no internet',
+      'Starting quickly without buying a server',
+    ],
   },
   models: {
     title: 'Models we can run',
@@ -605,26 +608,62 @@ export const en = {
     ],
   },
   pilot: {
-    title: 'Start with one use case in four weeks',
-    lead: 'A fixed-price pilot on your own documents. We agree what success looks like before we start, and you decide what happens next.',
-    steps: [
+    title: "From kick-off to go-live in four to eight weeks",
+    lead: "The full delivery, at a fixed price: four weeks in a private cloud, eight on your own premises. Before we start, we agree how success will be measured, and at the end you see the result against that measure.",
+    toggle: "Where it runs",
+    plans: [
       {
-        when: 'Week 0',
-        title: 'Scope',
-        text: 'We scope the use case, the documents, and the success measure, for example the share of questions answered correctly with the right source.',
+        name: "Private cloud",
+        length: "4 weeks",
+        inquiry: "cloud",
+        steps: [
+          { when: "Week 0", title: "Scope", text: "With your IT team, we agree the use case, the documents and the success measure, for example the share of questions answered correctly with the right source." },
+          { when: "Week 1", title: "Install", text: "We set up a private server for you in a data centre in your country, set up sign-in with your staff's work accounts, and load your documents." },
+          { when: "Week 2", title: "Test", text: "3–5 of your people score answers to 30 of your real questions, in the languages you work in." },
+          { when: "Week 3", title: "Use", text: "Your first teams start using it in their daily work. We review answer quality with you each week." },
+          { when: "Week 4", title: "Review", text: "Security review with your team, the handover pack, and a results report against the agreed measure." },
+        ],
       },
-      { when: 'Week 1', title: 'Install', text: 'On your server or in a private cloud. We load your documents.' },
-      { when: 'Week 2', title: 'Test', text: 'We test answers on 30 of your real questions with 3–5 of your people.' },
-      { when: 'Week 3', title: 'Use', text: '10–20 staff use it day to day. We review results with you.' },
       {
-        when: 'Week 4',
-        title: 'Review',
-        text: 'Security review, handover pack, and a results report against the measure we agreed.',
+        name: "On your premises",
+        length: "8 weeks",
+        inquiry: "onprem",
+        steps: [
+          { when: "Week 0", title: "Scope", text: "With your IT team, we agree the use case, the documents, the success measure and the server you need." },
+          { when: "Weeks 1–2", title: "Server", text: "Your IT team sets up the server we specified in your building, and we check it is ready. If you still need to buy one, delivery time comes on top." },
+          { when: "Weeks 3–4", title: "Install", text: "We install everything inside your network, with no internet needed, set up sign-in with your staff's work accounts, and load your documents." },
+          { when: "Week 5", title: "Test", text: "3–5 of your people score answers to 30 of your real questions, in the languages you work in." },
+          { when: "Weeks 6–7", title: "Use", text: "Your first teams start using it in their daily work. We review answer quality with you each week." },
+          { when: "Week 8", title: "Review", text: "Security review with your team on your own network, the handover pack, and a results report against the agreed measure." },
+        ],
       },
     ],
     weekLabel: 'Week',
-    decision: { title: 'Your decision', text: 'You see the results, then decide.' },
-    cta: 'Plan a pilot',
+    decision: { title: 'Live', text: 'Your staff use it every day. We look after updates, monitoring and backups.' },
+    cta: 'Get a quote',
+  },
+  trial: {
+    title: 'Try it first with a two-week pilot',
+    lead: 'Before any major commitment, a small number of your staff try it on your use case. You see real answers, then decide whether to go ahead with the full delivery.',
+    items: [
+      {
+        title: 'Small and focused',
+        text: 'A small number of your staff, your use case, and only the documents you choose to share.',
+      },
+      {
+        title: 'Our server, under NDA',
+        text: 'It runs on a private server we provide, for two weeks. We both sign an NDA before you share anything.',
+      },
+      {
+        title: 'Deleted when it ends',
+        text: 'When the pilot ends, we destroy the server and its storage, and confirm it to you in writing.',
+      },
+      {
+        title: 'A fraction of the cost',
+        text: 'A small fixed fee, a fraction of the full delivery, credited against it if you go ahead.',
+      },
+    ],
+    cta: 'Request a pilot',
   },
   faq: {
     title: 'FAQs',
@@ -634,20 +673,36 @@ export const en = {
         a: 'AI that runs on servers in your own premises, so your documents, questions and answers stay with you instead of going to a public AI service. We install it, run it and look after it. It can also run in a private cloud in your country.',
       },
       {
-        q: 'Does our data stay in the country?',
-        a: 'On your own server, your documents, questions and answers stay in your building. In the private cloud they stay on a server used by you alone, in an in-country data centre, reached over a private encrypted tunnel. Whether that satisfies a particular rule is for your legal and compliance team to confirm. We will describe exactly where each piece of data is stored.',
+        q: 'Our staff already use public AI tools. Why not just ban them?',
+        a: 'Bans tend to push use out of sight. In one 2025 survey of employees at large companies, 57% said they had entered confidential information into public AI tools. An approved assistant on your own servers keeps that work, and your documents, where you can see them.',
+      },
+      {
+        q: 'Is keeping the server in our country enough?',
+        a: 'It is one part. Also ask who operates the system and whose laws that company answers to. With us the model runs on a server dedicated to you, and no outside AI provider receives your questions. We describe exactly where each piece of data is stored; your legal and compliance team decides whether that meets your rules.',
       },
       {
         q: 'Can it work without the internet?',
-        a: 'Yes. In the in-your-building option the server works with the internet unplugged, which suits your most sensitive data.',
+        a: 'Yes. When the server is in your building, it works with the internet unplugged, which suits your most sensitive data.',
       },
       {
         q: 'Are open models as good as ChatGPT?',
-        a: 'It depends on the task. We run open models you can inspect and keep, and we test them on your own questions before you rely on them, so you see the results first. We do not claim they match the largest public services on every task.',
+        a: "It depends on the task. Open-weight models are fast closing the gap in answer quality and accuracy. We recommend the best model for your use case, and we can fine-tune it on your data so it performs closer to the leading frontier models. Either way, we test it on your own questions before you rely on it.",
       },
       {
         q: 'Do you train models on our data?',
-        a: 'No. We never use your data to train any model.',
+        a: "Only if you ask us to. We never use your data to train models for anyone else. If you want a fine-tuned model, we train it on your own server, and the result belongs to you.",
+      },
+      {
+        q: 'Who on our side needs to be involved?',
+        a: "Just someone from your IT team, for the server and sign-in. We do the rest. Your security and compliance teams are welcome to join the security review before go-live.",
+      },
+      {
+        q: 'Does running a pilot cost us anything?',
+        a: "A small fixed fee, a fraction of the full delivery. If you go ahead, we credit it against the delivery price. The pilot runs for two weeks on our server, under NDA, and we destroy the server and its storage afterwards.",
+      },
+      {
+        q: 'What do we get for audit and compliance?',
+        a: 'A log of questions and answers if you switch it on, a written record of where each piece of data is stored, the security review from delivery, and a handover pack describing how the system is built and run.',
       },
       {
         q: 'Can we connect our own applications?',
@@ -668,15 +723,20 @@ export const en = {
     ],
   },
   contact: {
-    title: 'See it working on your documents',
-    lead: "Tell us the use case you care about. We'll arrange a live demo and send a quote.",
+    title: "Bring your use case. We'll show it working on your documents.",
+    lead: "Tell us what you'd use it for and what kind of data it touches, such as customer records, patient files or contracts. We'll arrange a live demo and send a fixed quote.",
     name: 'Name',
     email: 'Work email',
     company: 'Company',
-    mode: 'Where would you run it?',
-    unsure: 'Not sure yet',
-    message: 'Your message (optional)',
-    submit: 'Send request',
+    inquiry: 'Inquiry type',
+    inquiries: [
+      { id: 'demo', label: 'Demo', submit: 'Request a demo' },
+      { id: 'pilot', label: 'Two-week pilot', submit: 'Request a pilot' },
+      { id: 'onprem', label: 'Quote: on your premises', submit: 'Request a quote' },
+      { id: 'cloud', label: 'Quote: private cloud', submit: 'Request a quote' },
+      { id: 'other', label: 'Other', submit: 'Send message' },
+    ],
+    message: 'What would you use it for, and what data does it touch? (optional)',
     sending: 'Sending…',
     success: 'Request sent. We will reply as soon as possible.',
     error: 'The request could not be sent. Try again, or write to',

@@ -2,9 +2,37 @@ import type { ReactNode } from "react";
 
 // Cards laid out as one dashed grid: an icon top left, the title and text at the bottom, and a faint
 // pixel-grid corner that lights up a little on hover. Used wherever a short list of points is shown.
-export type CellIcon = "docs" | "lang" | "log" | "api" | "limits" | "open" | "pin" | "shield" | "price" | "exit";
+export type CellIcon =
+  | "docs"
+  | "lang"
+  | "log"
+  | "api"
+  | "limits"
+  | "open"
+  | "pin"
+  | "shield"
+  | "price"
+  | "exit"
+  | "flow"
+  | "plug"
+  | "link";
 
 const ICONS: Record<CellIcon, ReactNode> = {
+  flow: (
+    <>
+      <circle cx="6" cy="6" r="2" />
+      <circle cx="18" cy="12" r="2" />
+      <circle cx="6" cy="18" r="2" />
+      <path d="M8 6h4a4 4 0 0 1 4 4M16 14a4 4 0 0 1-4 4H8" />
+    </>
+  ),
+  plug: <path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4" />,
+  link: (
+    <>
+      <path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1" />
+      <path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1" />
+    </>
+  ),
   docs: (
     <>
       <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
@@ -74,9 +102,17 @@ export function CellArt({ seed }: { seed: number }) {
   );
 }
 
-export function CellCards({ items, cols = 3 }: { items: { icon: CellIcon; title: string; text: string }[]; cols?: 2 | 3 }) {
+export function CellCards({
+  items,
+  cols = 3,
+  centre = false,
+}: {
+  items: { icon: CellIcon; title: string; text: string }[];
+  cols?: 2 | 3 | 4;
+  centre?: boolean;
+}) {
   return (
-    <div className={`cells cells-${cols}`}>
+    <div className={`cells cells-${cols}${centre ? " cells-centre" : ""}`}>
       {items.map((it, i) => (
         <article key={it.title} className="cell">
           <CellArt seed={i + 3} />

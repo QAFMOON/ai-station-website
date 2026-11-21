@@ -58,17 +58,10 @@ export function ResultsShowcase({ t, prompt, copy, copied }: { t: R; prompt: str
         ))}
       </p>
     </div>,
-    <Shot key="voice" src="librechat-voice-assistant" w={916} h={636} alt={tab.title} narrow>
-      <span className="focus-ring focus-tts" aria-hidden="true" />
-      <span className="focus-pill focus-pill-tts">{s.tts}</span>
-      <span className="focus-ring focus-stt" aria-hidden="true" />
-      <span className="focus-pill focus-pill-stt">{s.stt}</span>
-    </Shot>,
-    <Api key="api" t={t} prompt={prompt} copy={copy} copied={copied} />,
-    <Stack key="mcp">
+    <div key="api" className="shot-api">
+      <Api t={t} prompt={prompt} copy={copy} copied={copied} />
       <Shot src="librechat-mcp-catalog" w={1400} h={394} alt={s.mcpCatalog} badge={s.mcpCatalog} />
-      <Shot src="librechat-mcp-menu" w={925} h={337} alt={s.mcpMenu} badge={s.mcpMenu} />
-    </Stack>,
+    </div>,
   ];
 
   return (
@@ -117,14 +110,6 @@ function Shot({ src, w, h, alt, badge, wide, narrow, children }: { src: string; 
         {children}
       </div>
     </figure>
-  );
-}
-
-function Stack({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="shot-stack">
-      {children}
-    </div>
   );
 }
 

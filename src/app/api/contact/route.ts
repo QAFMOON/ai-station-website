@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-// Receives demo requests from the contact form and sends them on:
+// Receives demo, pilot and quote requests from the contact form and sends them on:
 // - Airtable, when AIRTABLE_TOKEN, AIRTABLE_BASE_ID and AIRTABLE_TABLE_ID are set (one new row per request).
 // - A webhook, when CONTACT_WEBHOOK_URL is set (the request as JSON).
 // - With neither set, the request is written to the server log only.
@@ -10,7 +10,7 @@ type Lead = {
   name: string;
   email: string;
   company: string;
-  mode: string;
+  inquiry: string;
   message: string;
   locale: string;
 };
@@ -20,10 +20,19 @@ const COLUMNS = {
   name: 'Name',
   email: 'Email',
   company: 'Company',
-  mode: 'Where would you run it',
+  inquiry: 'Inquiry type',
   message: 'Message',
   locale: 'Language',
 } as const;
+
+// The form sends an id; requests are stored in English whatever the page language.
+const INQUIRIES: Record<string, string> = {
+  demo: 'Demo',
+  pilot: 'Two-week pilot',
+  onprem: 'Quote: on your premises',
+  cloud: 'Quote: private cloud',
+  other: 'Other',
+};
 
 async function sendToAirtable(lead: Lead): Promise<boolean> {
   const token = process.env.AIRTABLE_TOKEN;
@@ -56,7 +65,7 @@ async function sendToWebhook(lead: Lead): Promise<boolean> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       ...lead,
-      text: `Demo request: ${lead.name}, ${lead.company} <${lead.email}> | ${lead.mode || 'not sure'} | ${lead.message}`,
+      text: `${lead.inquiry} request: ${lead.name}, ${lead.company} <${lead.email}> | ${lead.message}`,
     }),
   }).catch(() => null);
   return !!res && res.ok;
@@ -78,7 +87,7 @@ export async function POST(req: Request) {
     name: text('name', 120),
     email: text('email', 200),
     company: text('company', 160),
-    mode: text('mode', 80),
+    inquiry: INQUIRIES[text('inquiry', 20)] ?? INQUIRIES.demo!,
     message: text('message', 2000),
     locale: text('locale', 5),
   } as Lead;
@@ -94,7 +103,7 @@ export async function POST(req: Request) {
     !!(process.env.AIRTABLE_TOKEN && process.env.AIRTABLE_BASE_ID && process.env.AIRTABLE_TABLE_ID) ||
     !!process.env.CONTACT_WEBHOOK_URL;
   if (!configured) {
-    console.log('[demo-request]', JSON.stringify(lead));
+    console.log('[contact-request]', JSON.stringify(lead));
     return NextResponse.json({ ok: true });
   }
 

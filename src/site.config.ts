@@ -10,11 +10,10 @@ export const site = {
   themeToggle: true,
   heroVideo: undefined as string | undefined,
   linkedin: 'https://www.linkedin.com/company/aistationx',
-  location: { en: 'United Arab Emirates', ar: 'الإمارات العربية المتحدة' },
 } as const;
 
 export const locales = ['ar', 'en'] as const;
 export type Locale = (typeof locales)[number];
-export const defaultLocale: Locale = 'ar';
+export const defaultLocale: Locale = 'en';
 export const isLocale = (v: string): v is Locale => (locales as readonly string[]).includes(v);
 export const dirOf = (l: Locale) => (l === 'ar' ? 'rtl' : 'ltr');

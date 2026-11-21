@@ -21,7 +21,6 @@ export function Hero({ t, locale, video }: { t: Dictionary; locale: Locale; vide
       </div>
       <div className="wrap">
         <div className="hero-copy">
-          <p className="kicker">{t.hero.kicker}</p>
           <h1>
             {/* One sentence per line, so a two-sentence headline never breaks mid-sentence. */}
             {t.hero.title.split(/(?<=\.)\s+/).map((line) => (
@@ -32,16 +31,17 @@ export function Hero({ t, locale, video }: { t: Dictionary; locale: Locale; vide
           </h1>
           <p className="lead">{t.hero.lead}</p>
           <div className="actions">
-            <a href={`/${locale}#contact`} className="btn">
+            <a href={`/${locale}#contact`} className="btn" data-inquiry="demo">
               {t.hero.primary} <Arrow />
             </a>
-            <a href={`/${locale}#where`} className="btn btn-ghost">
+            <a href={`/${locale}#pilot`} className="btn btn-ghost">
               {t.hero.secondary}
             </a>
           </div>
         </div>
 
         <div id="results" className="results">
+          <p className="kicker results-label">{t.hero.results.label}</p>
           <ResultsShowcase t={t.hero.results} prompt={t.api.prompt} copy={t.api.copy} copied={t.api.copied} />
         </div>
 

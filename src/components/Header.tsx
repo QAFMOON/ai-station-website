@@ -5,18 +5,15 @@ import { useEffect, useRef, useState } from 'react';
 import type { Dictionary } from '@/i18n';
 import { site, type Locale } from '@/site.config';
 import { Logo } from './Logo';
-import { ThemeToggle } from './ThemeToggle';
 
 export function Header({
   t,
   locale,
   path = '',
-  banner = false,
 }: {
   t: Dictionary;
   locale: Locale;
   path?: string;
-  banner?: boolean;
 }) {
   const other: Locale = locale === 'ar' ? 'en' : 'ar';
   const [open, setOpen] = useState(false);
@@ -60,17 +57,6 @@ export function Header({
 
   return (
     <>
-      {banner && (
-        <div className='banner'>
-          <div className='wrap banner-row'>
-            <p>
-              <span className='tag'>{t.hero.banner.tag}</span>
-              <span className='banner-text'>{t.hero.banner.text}</span>
-            </p>
-            <a href={`/${locale}#pilot`}>{t.hero.banner.link} →</a>
-          </div>
-        </div>
-      )}
       <header
         ref={headerRef}
         className={['header', open && 'is-open', scrolled && 'is-scrolled'].filter(Boolean).join(' ')}>
@@ -84,17 +70,16 @@ export function Header({
                 {label}
               </a>
             ))}
-            <a href={`/${locale}#contact`} className='nav-cta btn'>
+            <a href={`/${locale}#contact`} className='nav-cta btn' data-inquiry='demo'>
               {t.nav.cta}
             </a>
           </nav>
           <div className='header-actions'>
-            {site.themeToggle && <ThemeToggle label={locale === 'ar' ? 'تبديل المظهر' : 'Toggle theme'} />}
             {/* Plain link on purpose: a full page load makes Chrome re-read the no-translate tags in the new language. */}
-            <a href={`/${other}${path}`} className='lang' lang='en' hrefLang={other} aria-label={t.nav.switchAria}>
+            <a href={`/${other}${path}`} className='lang' lang={other} hrefLang={other} aria-label={t.nav.switchAria}>
               {t.nav.switchLabel}
             </a>
-            <a href={`/${locale}#contact`} className='btn btn-small'>
+            <a href={`/${locale}#contact`} className='btn btn-small' data-inquiry='demo'>
               {t.nav.cta}
             </a>
             <button

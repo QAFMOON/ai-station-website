@@ -41,7 +41,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               <CellCards
                 cols={3}
                 items={t.get.items.map((it, i) => ({
-                  icon: (['docs', 'lang', 'log', 'api', 'limits', 'open'] as CellIcon[])[i] ?? 'docs',
+                  icon: (['docs', 'flow', 'api', 'plug', 'link', 'log'] as CellIcon[])[i] ?? 'docs',
                   title: it.title,
                   text: it.text,
                 }))}
@@ -87,19 +87,44 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </Reveal>
           </div>
         </section>
-        <section id='pilot' className='section'>
+        <section id='delivery' className='section'>
           <div className='wrap'>
             <Reveal className='section-head'>
               <div>
                 <h2 className='h2'>{t.pilot.title}</h2>
                 <p className='section-lead'>{t.pilot.lead}</p>
               </div>
-              <a href={`/${locale}#contact`} className='btn'>
+              <a href={`/${locale}#contact`} className='btn' data-inquiry='quote'>
                 {t.pilot.cta}
               </a>
             </Reveal>
             <Reveal>
               <PilotGantt t={t.pilot} />
+            </Reveal>
+          </div>
+        </section>
+
+        <section id='pilot' className='section section-pilot'>
+          <div className='wrap'>
+            <Reveal className='section-head'>
+              <div>
+                <h2 className='h2'>{t.trial.title}</h2>
+                <p className='section-lead'>{t.trial.lead}</p>
+              </div>
+              <a href={`/${locale}#contact`} className='btn' data-inquiry='pilot'>
+                {t.trial.cta}
+              </a>
+            </Reveal>
+            <Reveal>
+              <CellCards
+                cols={4}
+                centre
+                items={t.trial.items.map((it, i) => ({
+                  icon: (['limits', 'shield', 'exit', 'price'] as CellIcon[])[i] ?? 'limits',
+                  title: it.title,
+                  text: it.text,
+                }))}
+              />
             </Reveal>
           </div>
         </section>
@@ -130,7 +155,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </p>
             </Reveal>
             <Reveal delay={0.1}>
-              <ContactForm t={t.contact} locale={locale} modes={t.where.options.map((o) => o.name)} />
+              <ContactForm t={t.contact} locale={locale} />
             </Reveal>
           </div>
         </section>
