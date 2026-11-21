@@ -4,11 +4,9 @@ import { useInView, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
 import type { Dictionary } from "@/i18n";
 
-// The pilot as a Gantt chart: a week axis (0 to 8) across the top, one bar per phase spanning its weeks, and a
+// The pilot as a Gantt chart: a week axis (0 to the last week in the copy) across the top, one bar per phase spanning its weeks, and a
 // decision milestone at the end. Bar positions come from the "Weeks 2–3" text of each step, so the copy stays the
 // single source. It draws on the same dashed grid as the rest of the site, and the bars grow in once, when scrolled to.
-const WEEKS = 9; // weeks 0 to 8
-
 const weeksOf = (when: string): [number, number] => {
   const n = (when.match(/\d+/g) ?? ["0"]).map(Number);
   return [n[0]!, n[n.length - 1]!];
@@ -18,10 +16,11 @@ export function PilotGantt({ t }: { t: Dictionary["pilot"] }) {
   const ref = useRef<HTMLDivElement>(null);
   const seen = useInView(ref, { once: true, margin: "-80px" });
   const reduce = useReducedMotion();
+  const WEEKS = Math.max(...t.steps.map((s) => weeksOf(s.when)[1])) + 1; // weeks 0 to the last one
   const cells = Array.from({ length: WEEKS }, (_, w) => <i key={w} className="gantt-cell" style={{ gridColumn: w + 1 }} aria-hidden="true" />);
 
   return (
-    <div ref={ref} className={`gantt${seen || reduce ? " is-in" : ""}`} role="table" aria-label={t.title}>
+    <div ref={ref} className={`gantt${seen || reduce ? " is-in" : ""}`} style={{ ["--weeks" as string]: WEEKS }} role="table" aria-label={t.title}>
       <div className="gantt-row gantt-head" role="row">
         <div className="gantt-label" role="columnheader">
           {t.weekLabel}

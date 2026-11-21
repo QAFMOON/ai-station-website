@@ -6,7 +6,7 @@ import { Arrow } from "./Arrow";
 import { HeroGrid } from "./HeroGrid";
 import { ResultsShowcase } from "./ResultsShowcase";
 
-// A spread of makers, including Arabic-first models, shown as "runs any open model".
+// A spread of makers, including Arabic-first models, shown as "runs leading open models".
 const STRIP: ModelId[] = ["deepseek-v4-pro", "gpt-oss-120b", "mistral-small-4", "nemotron-3-ultra", "qwen3-8-27b", "gemma-4-31b", "jais-2-70b", "allam-7b"];
 
 // Centred hero: say what it does, then show what you get (the results as real app windows),
@@ -22,7 +22,14 @@ export function Hero({ t, locale, video }: { t: Dictionary; locale: Locale; vide
       <div className="wrap">
         <div className="hero-copy">
           <p className="kicker">{t.hero.kicker}</p>
-          <h1>{t.hero.title}</h1>
+          <h1>
+            {/* One sentence per line, so a two-sentence headline never breaks mid-sentence. */}
+            {t.hero.title.split(/(?<=\.)\s+/).map((line) => (
+              <span key={line} className='h1-line'>
+                {line}
+              </span>
+            ))}
+          </h1>
           <p className="lead">{t.hero.lead}</p>
           <div className="actions">
             <a href={`/${locale}#contact`} className="btn">

@@ -8,7 +8,7 @@ import { CopyButton } from "./CopyButton";
 
 type R = Dictionary["hero"]["results"];
 
-// Six tabs. Chat, agents, voice and MCP show the real LibreChat interface that AI Station deploys; code shows
+// Six tabs. Chat, agents, voice and MCP show the real LibreChat interface that AIStationX deploys; code shows
 // OpenCode inside VS Code; the API tab is a real request. The screenshots are official ones from the open-source
 // projects (MIT). See public/images/product/CREDITS.md. Swap in your own deployment's screenshots under the same names.
 export function ResultsShowcase({ t, prompt, copy, copied }: { t: R; prompt: string; copy: string; copied: string }) {
@@ -131,7 +131,7 @@ function Stack({ children }: { children: React.ReactNode }) {
 const BASE = "https://ai.your-company/v1";
 type Lang = "curl" | "python" | "js";
 const LANGS: { id: Lang; label: string; title: string }[] = [
-  { id: "curl", label: "curl", title: "ai-station: zsh" },
+  { id: "curl", label: "curl", title: "aistationx: zsh" },
   { id: "python", label: "Python", title: "chat.py" },
   { id: "js", label: "JavaScript", title: "chat.mjs" },
 ];
@@ -140,7 +140,7 @@ function code(lang: Lang, prompt: string) {
   const q = JSON.stringify(prompt);
   if (lang === "curl")
     return `curl ${BASE}/chat/completions \\
-  -H "Authorization: Bearer $AI_STATION_KEY" \\
+  -H "Authorization: Bearer $AISTATIONX_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
     "model": "chat-arabic",
@@ -154,7 +154,7 @@ from openai import OpenAI
 
 client = OpenAI(
     base_url="${BASE}",
-    api_key=os.environ["AI_STATION_KEY"],
+    api_key=os.environ["AISTATIONX_KEY"],
 )
 
 reply = client.chat.completions.create(
@@ -166,7 +166,7 @@ print(reply.choices[0].message.content)`;
 
 const client = new OpenAI({
   baseURL: "${BASE}",
-  apiKey: process.env.AI_STATION_KEY,
+  apiKey: process.env.AISTATIONX_KEY,
 });
 
 const reply = await client.chat.completions.create({

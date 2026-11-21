@@ -1,4 +1,4 @@
-/* AI Station: black and white.
+/* AIStationX: black and white.
    Colour: the primary colour is black in light mode and white in dark mode. Every colour on the site comes from the tokens
    below, which flip with the theme (data-theme, or the system setting). Nothing else in this file, and no component,
    should hard-code a colour: use var(--token), or rgba(var(--ink-rgb) / var(--accent-rgb) / var(--bg-rgb), alpha) for transparency.
@@ -2594,6 +2594,9 @@ body:has(.hero) .header {
   margin-top: 1rem;
   font-size: clamp(2.1rem, 4.2vw, 3.5rem);
 }
+.h1-line {
+  display: block;
+}
 .hero-centre .lead {
   margin-top: 1rem;
 }
@@ -3338,7 +3341,7 @@ body:has(.hero) .header {
 }
 .gantt-track {
   display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--weeks, 9), minmax(0, 1fr));
   align-items: center;
   border-inline-start: 1px dashed var(--frame-line);
 }

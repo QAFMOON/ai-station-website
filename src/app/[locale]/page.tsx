@@ -8,7 +8,6 @@ import { ModelOrbit } from '@/components/ModelOrbit';
 import { PilotGantt } from '@/components/PilotGantt';
 import { Hero } from '@/components/Hero';
 import { Reveal } from '@/components/Reveal';
-import { StatementScene } from '@/components/StatementScene';
 import { getDictionary } from '@/i18n';
 import { isLocale, site } from '@/site.config';
 
@@ -32,13 +31,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <main id='main'>
         <Hero t={t} locale={locale} video={site.heroVideo} />
 
-        {/* Statement section (scroll-lit text + turning star): hidden for now. To bring it back, uncomment.
-        <section className="section section-statement">
-          <div className="wrap">
-            <StatementScene segments={t.statement} />
-          </div>
-        </section>
-        */}
 
         <section id='benefits' className='section'>
           <div className='wrap'>
@@ -142,30 +134,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </Reveal>
           </div>
         </section>
-
-        {/* Security section ("Built for your IT and risk teams"): hidden for now. To bring it back, uncomment.
-        <section id="security" className="section">
-          <div className="wrap split">
-            <Reveal>
-              <h2 className="h2">{t.security.title}</h2>
-              <ul className="chips chips-lg">
-                {t.security.models.map((m) => (
-                  <li key={m.name} className="chip">
-                    {m.name}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <ul className="checks">
-                {t.security.items.slice(0, 4).map((it) => (
-                  <li key={it}>{it}</li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
-        </section>
-        */}
       </main>
       <Footer t={t} locale={locale} />
       <script type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
