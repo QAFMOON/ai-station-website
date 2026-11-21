@@ -125,6 +125,25 @@ export function PilotGantt({ t }: { t: Dictionary["pilot"] }) {
           </div>
         </div>
       </div>
+      {/* The plans not on screen stay in the HTML for search engines and AI crawlers that don't run scripts. */}
+      <div hidden>
+        {t.plans.map((x, n) =>
+          n === p ? null : (
+            <section key={x.name}>
+              <h3>
+                {x.name} ({x.length})
+              </h3>
+              <ol>
+                {x.steps.map((s) => (
+                  <li key={s.title}>
+                    {s.when}, {s.title}: {s.text}
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ),
+        )}
+      </div>
     </>
   );
 }

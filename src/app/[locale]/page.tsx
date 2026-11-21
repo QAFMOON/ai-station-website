@@ -15,14 +15,59 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const t = getDictionary(locale);
-  const faqLd = {
+  // This page, the service it describes and its FAQs, for search engines and AI answer engines.
+  // Built from the same copy as the page. No prices, ratings or reviews: there are none to show.
+  const pageUrl = `${site.url}/${locale}`;
+  const org = { '@id': `${site.url}/#organization` };
+  const pageLd = {
     '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: t.faq.items.map((it) => ({
-      '@type': 'Question',
-      name: it.q,
-      acceptedAnswer: { '@type': 'Answer', text: it.a },
-    })),
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': `${pageUrl}#webpage`,
+        url: pageUrl,
+        name: t.meta.title,
+        description: t.meta.description,
+        inLanguage: locale,
+        isPartOf: { '@id': `${site.url}/#website` },
+        about: org,
+        primaryImageOfPage: `${site.url}/og-${locale}.png`,
+      },
+      {
+        '@type': 'Service',
+        '@id': `${pageUrl}#service`,
+        name: t.hero.title,
+        description: t.hero.lead,
+        serviceType: 'Private AI deployment (on-premises and private cloud)',
+        provider: org,
+        availableLanguage: ['English', 'Arabic'],
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: t.pilot.title,
+          itemListElement: [
+            {
+              '@type': 'Offer',
+              name: t.trial.title,
+              description: t.trial.items.map((i) => i.text).join(' '),
+            },
+            ...t.pilot.plans.map((p) => ({
+              '@type': 'Offer',
+              name: `${p.name} (${p.length})`,
+              description: p.steps.map((s) => `${s.when}, ${s.title}: ${s.text}`).join(' '),
+            })),
+          ],
+        },
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${pageUrl}#faq`,
+        mainEntity: t.faq.items.map((it) => ({
+          '@type': 'Question',
+          name: it.q,
+          acceptedAnswer: { '@type': 'Answer', text: it.a },
+        })),
+      },
+    ],
   };
 
   return (
@@ -161,7 +206,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </section>
       </main>
       <Footer t={t} locale={locale} />
-      <script type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <script type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(pageLd) }} />
     </>
   );
 }

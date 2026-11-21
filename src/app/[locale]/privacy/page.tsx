@@ -3,13 +3,20 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { getDictionary } from "@/i18n";
-import { isLocale, site } from "@/site.config";
+import { defaultLocale, isLocale, locales, site } from "@/site.config";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
   const t = getDictionary(locale);
-  return { title: `${t.privacy.title} — ${site.name[locale]}`, alternates: { canonical: `/${locale}/privacy` } };
+  return {
+    title: `${t.privacy.title} — ${site.name[locale]}`,
+    description: t.privacy.paragraphs[0],
+    alternates: {
+      canonical: `/${locale}/privacy`,
+      languages: { ...Object.fromEntries(locales.map((l) => [l, `/${l}/privacy`])), "x-default": `/${defaultLocale}/privacy` },
+    },
+  };
 }
 
 export default async function Privacy({ params }: { params: Promise<{ locale: string }> }) {

@@ -24,12 +24,32 @@ Any host that runs Next.js works (Vercel, a Node server, or Docker). Set these e
 
 ## Before you publish
 
-1. **Name.** "AI Station" is a working name. Check the trademark and domain, then change it in `src/site.config.ts`. Regenerate images with `python3 ../brand/make-assets.py`.
+1. **Name.** "AI Station" is a working name. Check the trademark and domain, then change it in `src/site.config.ts`. Regenerate the share images and app icons with `npm run og`.
 2. **Contact details.** Replace `hello@example.com` and the LinkedIn URL in `src/site.config.ts`.
 3. **Legal entity.** Add the registered company name and licence number to `footer.legal` in `src/i18n/en.ts` and `ar.ts`, and review the privacy page with a lawyer.
 4. **Arabic review.** Have a native Arabic speaker read `src/i18n/ar.ts`.
 5. **Claims.** The copy describes the service after the four proofs in the technical guide pass. Remove anything you have not yet demonstrated. Do not add customer logos, testimonials or certifications you do not have.
-6. **Sources.** The two cited statistics link to their sources. Re-check the links.
+6. **Sources.** The one statistic on the site (57%, in the FAQ) names its source: TELUS Digital, January 2025. The full research is in `docs/copy-research.md`.
+
+## Search engines and AI assistants
+
+What the site already does:
+
+- **Every word is in the HTML**, including inactive tabs and the delivery plan not on screen, so crawlers that don't run JavaScript (most AI crawlers) read everything.
+- **`/llms.txt` and `/llms-full.txt`**: the site as Markdown for AI assistants, built from the same copy files, so they never drift from the pages.
+- **Structured data**: Organization, WebSite, WebPage, Service and FAQPage, built from the copy. No prices, ratings or reviews, because there are none to show.
+- **`robots.txt`** lets everyone in, and names the AI search and training crawlers explicitly so the choice is easy to change per crawler (`src/app/robots.ts`).
+- **Sitemap with language alternates**, canonical links, hreflang (English is `x-default`), a permanent `/` → `/en` redirect, and a real 404 page in both languages.
+- **Share images and app icons** come from `npm run og`. Run it after changing the hero title or lead. It needs Chrome, Brave or Chromium installed.
+
+At launch (only you can do these):
+
+1. Set `NEXT_PUBLIC_SITE_URL` to the real domain and redeploy. Every canonical link, sitemap entry and `llms.txt` link uses it.
+2. Add the site to [Google Search Console](https://search.google.com/search-console) and submit `/sitemap.xml`.
+3. Add it to [Bing Webmaster Tools](https://www.bing.com/webmasters) and submit the sitemap. ChatGPT search and Copilot draw on Bing's index.
+4. Check the home page in Google's [Rich Results Test](https://search.google.com/test/rich-results) and the [Schema.org validator](https://validator.schema.org/).
+5. Share the URL once in LinkedIn's [Post Inspector](https://www.linkedin.com/post-inspector/) to refresh its cached preview.
+6. Make sure the LinkedIn page in `src/site.config.ts` exists. It is listed as an official profile in the structured data.
 
 ## Where things are
 

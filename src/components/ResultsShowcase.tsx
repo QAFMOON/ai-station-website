@@ -96,6 +96,16 @@ export function ResultsShowcase({ t, prompt, copy, copied }: { t: R; prompt: str
             {frames[i]}
           </motion.div>
         </AnimatePresence>
+        {/* The other tabs' text stays in the HTML, so search engines and AI crawlers that don't run scripts still read it. */}
+        <div hidden>
+          {t.tabs.map((x, n) =>
+            n === i ? null : (
+              <p key={x.tab}>
+                <b>{x.tab}: {x.title}</b> {x.text}
+              </p>
+            ),
+          )}
+        </div>
       </div>
     </div>
   );

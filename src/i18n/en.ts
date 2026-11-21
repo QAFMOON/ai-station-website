@@ -3,7 +3,7 @@ export const en = {
   meta: {
     title: 'AIStationX — Private AI on servers you control',
     description:
-      'Private AI for banks, hospitals, government and law firms: chat, agents, coding help and an API on open models, on your own server or a private server in your country, tested on your own documents.',
+      "Private AI on your own server or a private server in your country: chat, agents, coding help and an API on open models, installed and run for you.",
   },
   nav: {
     models: 'Models',
@@ -673,8 +673,12 @@ export const en = {
         a: 'AI that runs on servers in your own premises, so your documents, questions and answers stay with you instead of going to a public AI service. We install it, run it and look after it. It can also run in a private cloud in your country.',
       },
       {
+        q: "What is the difference between on-premises and private cloud AI?",
+        a: "On-premises means the AI runs on a server in your own building and can work with the internet unplugged. Private cloud means it runs on a server used only by you, in a data centre in your country, reached over a private, encrypted connection. You get the same assistant and API either way. Private cloud needs no hardware and goes live in four weeks; on-premises takes eight.",
+      },
+      {
         q: 'Our staff already use public AI tools. Why not just ban them?',
-        a: 'Bans tend to push use out of sight. In one 2025 survey of employees at large companies, 57% said they had entered confidential information into public AI tools. An approved assistant on your own servers keeps that work, and your documents, where you can see them.',
+        a: 'Bans tend to push use out of sight. In a January 2025 survey of employees at large companies by TELUS Digital, 57% said they had entered confidential information into public AI tools. An approved assistant on your own servers keeps that work, and your documents, where you can see them.',
       },
       {
         q: 'Is keeping the server in our country enough?',
@@ -717,6 +721,14 @@ export const en = {
         a: 'It depends on the model and how many people use it. We size it with you before you buy anything, and a private cloud needs no hardware at all.',
       },
       {
+        q: "Which open models can you run?",
+        a: "Open-weight models from the major AI labs and language-specific models, from small ones to over 100 billion parameters, plus models for search, documents and speech. The model list on this page shows examples, and most open models on Hugging Face can be added after we test them on your questions.",
+      },
+      {
+        q: "How long does it take to go live?",
+        a: "Four weeks in a private cloud and eight weeks on your own premises, from scoping to go-live. If you want to try it first, a two-week pilot on our server can come before that.",
+      },
+      {
         q: 'What do you look after?',
         a: 'Installation, updates, monitoring with alerts, and nightly encrypted backups with restore tests.',
       },
@@ -746,9 +758,14 @@ export const en = {
   footer: {
     product: 'Product',
     company: 'Company',
-    tagline: 'Private AI for regulated organisations, on servers you control.',
+    tagline: "AIStationX installs and runs open AI models on your own servers, or on a private server used only by you, connected to your documents.",
     privacy: 'Privacy',
     rights: 'All rights reserved.',
+  },
+  notFound: {
+    title: 'Page not found',
+    text: "This page doesn't exist or has moved.",
+    back: 'Go to the home page',
   },
   privacy: {
     title: 'Privacy',
