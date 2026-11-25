@@ -7,6 +7,7 @@ import "@fontsource/almarai/arabic-800.css";
 import "@fontsource/almarai/latin-400.css";
 import "@fontsource/almarai/latin-700.css";
 import "../globals.css";
+import { MicrosoftClarity } from "@/components/MicrosoftClarity";
 import { getDictionary } from "@/i18n";
 import { defaultLocale, dirOf, isLocale, locales, site } from "@/site.config";
 
@@ -102,6 +103,7 @@ export default async function RootLayout({
         )}
       </head>
       <body>
+        <MicrosoftClarity locale={locale} />
         <a className="skip" href="#main">
           {t.nav.skip}
         </a>

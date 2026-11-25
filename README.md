@@ -1,6 +1,6 @@
 # AI Station website
 
-Marketing site in Arabic (default) and English. Next.js 15 App Router, no CSS framework, no tracking.
+Marketing site in Arabic (default) and English. Next.js 15 App Router, no CSS framework. Optional Microsoft Clarity when `NEXT_PUBLIC_CLARITY_PROJECT_ID` is set.
 
 ## Run it
 
@@ -19,6 +19,7 @@ Any host that runs Next.js works (Vercel, a Node server, or Docker). Set these e
 | Variable | Purpose |
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | Your real address, e.g. `https://www.aistationx.com`. Used for canonical links, hreflang, sitemap and share images. |
+| `NEXT_PUBLIC_CLARITY_PROJECT_ID` | [Microsoft Clarity](https://clarity.microsoft.com) project ID for heatmaps and session recordings. Leave empty in local dev if you do not want tracking. |
 | `CONTACT_WEBHOOK_URL` | Where demo requests are sent as JSON (Slack webhook, Zapier, n8n, your CRM). Without it, requests are only written to the server log. |
 | `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_ID` | Adds each demo, pilot or quote request as a row in an Airtable table. The token needs the `data.records:write` scope. The table needs the text columns Name, Email, Company, Inquiry type, Message, Language and Received at (names can be changed at the top of `src/app/api/contact/route.ts`). Set these server-side only, never with a `NEXT_PUBLIC_` prefix. |
 
